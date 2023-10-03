@@ -1,11 +1,11 @@
 import { isSet } from './util';
 
 export enum MouseButton {
-	MouseLeft = 1 << 1,
-	MouseRight = 1 << 2,
-	MouseMiddle = 1 << 3,
-	Mouse4 = 1 << 4,
-	Mouse5 = 1 << 5,
+	MouseLeft = 1 << 0,
+	MouseRight = 1 << 1,
+	MouseMiddle = 1 << 2,
+	Mouse4 = 1 << 3,
+	Mouse5 = 1 << 4,
 }
 
 export class Cursor {
