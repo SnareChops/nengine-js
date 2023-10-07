@@ -72,7 +72,7 @@ export interface Letter {
 }
 
 export function drawStringBlock(dest: CanvasRenderingContext2D, bounds: Bounds, kerning: number, leading: number, lines: Letter[][]) {
-    const [x, y] = bounds.vector.vec2();
+    const [x, y] = bounds.vec2();
     for (let i = 0; i < lines.length; i++) {
         drawString(dest, x, y + (i * (leading + lines[i][0].image.height)), kerning, lines[i]);
     }
@@ -154,7 +154,7 @@ export function wrap(bounds: Bounds, kerning: number, leading: number, lines: Le
         for (const letter of line) {
             currWidth += kerning + letter.image.width;
             currLine.push(letter);
-            if (currWidth > bounds.dx()) {
+            if (currWidth > bounds.width()) {
                 for (let i = currLine.length - 1; i > 0; i--) {
                     if (currLine[i].char == 32) {
                         result.push(currLine.slice(0, i));
