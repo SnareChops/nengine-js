@@ -61,7 +61,7 @@ export class Renderer {
                 if (item.rotation() != 0) {
                     ctx.translate(...item.vecOf(CENTER, CENTER));
                     ctx.rotate(item.rotation());
-                    ctx.drawImage(image, -item.width() / 2, -item.height() / 2)
+                    ctx.drawImage(image, -item.width() / 2, -item.height() / 2, item.width(), item.height())
                     ctx.resetTransform();
                 } else {
                     ctx.drawImage(image, ...item.rawPos(), item.width(), item.height());

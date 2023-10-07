@@ -1,5 +1,3 @@
-import { normalVector, normalizeVector } from './trig';
-
 export const TOP = 0;
 export const CENTER = 1;
 export const BOTTOM = 2;
@@ -7,26 +5,26 @@ export const LEFT = 3;
 export const RIGHT = 4;
 
 export interface Bounds {
-    vec2(): [number, number];
+    vec2(): [x: number, y: number];
     setVec2(x: number, y: number);
-    vec3(): [number, number, number];
+    vec3(): [x: number, y: number, z: number];
     setVec3(x: number, y: number, z: number);
-    rawPos(): [number, number];
-    anchor(): [number, number];
+    rawPos(): [x: number, y: number];
+    offset(): [x: number, y: number];
+    setOffset(x: number, y: number);
     setAnchor(x: number, y: number);
-    vecOf(h: number, v: number): [number, number];
-    offset(): [number, number];
-    size(): [number, number];
+    vecOf(h: number, v: number): [x: number, y: number];
+    size(): [width: number, height: number];
     setSize(w: number, h: number);
     rotation(): number;
     setRotation(theta: number);
     scale(): number;
     setScale(scale: number);
-    scaleTo(w: number, h: number);
+    scaleTo(w: number, h: number): [width: number, height: number];
     width(): number;
     height(): number;
     isWithin(x: number, y: number): boolean;
-    normalVectorOf(edge: number): [number, number];
+    normalVectorOf(edge: number): [x: number, y: number];
 }
 
 export abstract class BaseBounds {
@@ -35,8 +33,6 @@ export abstract class BaseBounds {
     #z: number = 0;
     #offsetX: number = 0;
     #offsetY: number = 0;
-    #anchorX: number = 0;
-    #anchorY: number = 0;
     #width: number = 0;
     #height: number = 0;
     #rotation: number = 0;
@@ -47,32 +43,47 @@ export abstract class BaseBounds {
         this.#height = height;
     }
 
-    vec2(): [number, number] {
+    /** Gets the current position of the bounds */
+    vec2(): [x: number, y: number] {
         return [this.#x, this.#y];
     }
 
+    /** Set the current position of the bounds */
     setVec2(x: number, y: number) {
         this.#x = x;
         this.#y = y;
     }
 
-    vec3(): [number, number, number] {
+    /** Get the current position and z-index of the bounds */
+    vec3(): [x: number, y: number, z: number] {
         return [this.#x, this.#y, this.#z];
     }
 
+    /** Sets the current position and z-index of the bounds */
     setVec3(x: number, y: number, z: number) {
         this.#x = x;
         this.#y = y;
         this.#z = z;
     }
 
-    rawPos(): [number, number] {
+    /** Gets the position of the top-left corner of the bounds */
+    rawPos(): [x: number, y: number] {
         return [this.#x - this.#offsetX, this.#y - this.#offsetY];
     }
 
+    /** Gets the relative offset of the position within the bounds */
+    offset(): [x: number, y: number] {
+        return [this.#offsetX * this.#scale, this.#offsetY * this.#scale];
+    }
+
+    /** Sets the raw offset value for the bounds positioning */
+    setOffset(x: number, y: number) {
+        this.#offsetX = x;
+        this.#offsetY = y;
+    }
+
+    /** Sets the anchor point (internally the offset) for the bounds positioning */
     setAnchor(x: number, y: number) {
-        this.#anchorX = x;
-        this.#anchorY = y;
         switch (x) {
             case LEFT:
                 this.#offsetX = 0;
@@ -97,7 +108,8 @@ export abstract class BaseBounds {
         }
     }
 
-    vecOf(h: number, v: number): [number, number] {
+    /** Return the actual absolute position of the specified anchor point */
+    vecOf(h: number, v: number): [x: number, y: number] {
         let x = 0;
         let y = 0;
         switch (h) {
@@ -125,55 +137,61 @@ export abstract class BaseBounds {
         return [x, y];
     }
 
-    anchor(): [number, number] {
-        return [this.#anchorX, this.#anchorY];
-    }
 
-    offset(): [number, number] {
-        return [this.#offsetX * this.#scale, this.#offsetY * this.#scale];
-    }
-
-    size(): [number, number] {
+    /** Get the width and height of the bounds */
+    size(): [width: number, height: number] {
         return [this.width(), this.height()];
     }
 
-    // TODO: make sure this makes sense with a scaled object
+    /** Set the size (width, height) of the bounds */
     setSize(w: number, h: number) {
-        this.#width = w;
-        this.#height = h;
+        this.#width = w / this.#scale;
+        this.#height = h / this.#scale;
     }
 
+    /** Get the width of the bounds */
     width(): number {
         return this.#width * this.#scale;
     }
 
+    /** Get the height of the bounds */
     height(): number {
         return this.#height * this.#scale;
     }
 
+    /** Get the rotation of the bounds (in radians) */
     rotation(): number {
         return this.#rotation;
     }
 
+    /** Set the rotation of the bounds (in radians) */
     setRotation(theta: number) {
         this.#rotation = theta;
     }
 
+    /** Get the scale of the bounds */
     scale(): number {
         return this.#scale;
     }
 
+    /** Set the scale of the bounds */
     setScale(scale: number) {
         this.#scale = scale;
+        // this.#offsetX *= scale
+        // this.#offsetY *= scale
     }
 
-    // TODO: What happens if you try to scale an already scaled image
-    scaleTo(width: number, height: number) {
+    /** Scale the bounds to fit within the specified dementions 
+     *  Returns the actual size after scaling
+     */
+    scaleTo(width: number, height: number): [width: number, height: number] {
         const widthFactor = width / this.#width;
         const heightFactor = height / this.#height;
         this.#scale = Math.min(widthFactor, heightFactor);
+        return this.size();
     }
 
+    /** Get the normal vector of the specified edge */
     normalVectorOf(edge: number): [number, number] {
         switch (edge) {
             case LEFT:
@@ -189,6 +207,7 @@ export abstract class BaseBounds {
         }
     }
 
+    /** Check if the provided absolute coordinate is within the bounds */
     isWithin(x: number, y: number): boolean {
         const [x1, y1] = this.rawPos();
         if (this.width() == 1 && this.height() == 1) {
@@ -199,6 +218,7 @@ export abstract class BaseBounds {
         return x > x1 && x < x2 && y > y1 && y < y2;
     }
 
+    /** Check if this bounds collides with another */
     doesCollide(other: Bounds): boolean {
         const [w1, h1] = this.size();
         const [x1, y1] = this.rawPos();
@@ -207,6 +227,7 @@ export abstract class BaseBounds {
         return !(x2 + w2 < x1 || x2 > x1 + w1 || y2 + h2 < y1 || y2 > y1 + h1);
     }
 
+    /** Get the edges involved in a collision */
     collisionEdges(other: Bounds): [number, number] {
         const [w1, h1] = this.size();
         const [x1, y1] = this.rawPos();
@@ -245,21 +266,25 @@ export class PhysicsBounds extends BaseBounds {
         super(width, height);
     }
 
-    velocity(): [number, number] {
+    /** Gets the horizontal and vertical velocity of the bounds */
+    velocity(): [h: number, v: number] {
         return [this.#vx, this.#vy];
     }
 
+    /** Sets the horizontal and vertical velocity of the bounds */
     setRawVelocity(x: number, y: number) {
         this.#vx = x;
         this.#vy = y;
     }
 
+    /** Sets the angle and magnitude of the bounds velocity */
     setVelocity(angle: number, magnitude: number) {
         this.#vx = Math.cos(angle) * magnitude;
         this.#vy = Math.sin(angle) * magnitude;
     }
 
-    acceleration(): [number, number] {
+    /** Gets the acceration of the bounds */
+    acceleration(): [x: number, y: number] {
         return [this.#ax, this.#ay];
     }
 

@@ -1,39 +1,36 @@
-
-// Animation represents timings for a full animation
-export class Animation extends Array<AnimationFrame>{
-
-	/** addFrame adds a new frame to an animation */
-	addFrame(start: number, duration: number, index: number): Animation {
-		this.push({ start, duration, frame: index });
-		return this;
-	}
+// FrameAnimation represents timings for a single animation frame
+export interface AnimationFrame {
+	start: number;
+	duration: number;
+	frame: CanvasImageSource;
 }
 
-// AnimationFrame represents timings for a single animation frame
-export interface AnimationFrame {
+interface Frame {
 	start: number;
 	duration: number;
 	frame: number;
 }
 
-
-// Animator top level struct for managing animations
-// Tip: Use in combination with Bounds to create an animated sprite
-export class Animator {
+/**
+ * A Frame-by-frame animator that can run specified frame-by-frame animations
+ * Tip: Use in combination with Bounds to create an animated sprite
+ */
+export class FrameByFrameAnimator {
 	#frames: CanvasImageSource[] = [];
-	#animations: Map<string, Animation> = new Map();
-	#active: Animation | undefined;
+	#animations: Map<string, { start: number, duration: number, frame: number }[]> = new Map();
+	#active: Frame[] | undefined;
 	#frame: number;
 	#elapsed: number;
 	#loop: boolean;
 
-	constructor(frames: CanvasImageSource[]) {
-		this.#frames = frames;
-	}
-
 	/** addAnimation Adds a new named animation to the Animator */
-	addAnimation(name: string, animation: Animation): this {
-		this.#animations.set(name, animation);
+	addAnimation(name: string, animation: AnimationFrame[]): this {
+		const _animation: Frame[] = [];
+		for (const frame of animation) {
+			if (!this.#frames.includes(frame.frame)) this.#frames.push(frame.frame);
+			_animation.push({ start: frame.start, duration: frame.duration, frame: this.#frames.indexOf(frame.frame) });
+		}
+		this.#animations.set(name, _animation);
 		return this;
 	}
 	/** 
@@ -52,8 +49,8 @@ export class Animator {
 		this.#elapsed = 0
 	}
 
-	/** Image Returns the current active image for the animation */
-	Image(): CanvasImageSource {
+	/** image Returns the current active image for the animation */
+	image(): CanvasImageSource {
 		return this.#frames[this.#frame];
 	}
 

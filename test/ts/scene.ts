@@ -10,10 +10,9 @@ export class TestScene {
     constructor() {
         this.sprite.setVec2(300, 300);
         this.renderer.addToScreen(this.sprite);
-        this.sprite2.setVec2(1000, 300);
-        // this.sprite2.setAnchor(CENTER, CENTER);
-        // this.sprite2.setScale(2);
-        this.sprite2.setRotation(Math.PI / 4);
+        this.sprite2.setVec2(1100, 300);
+        this.sprite2.setAnchor(CENTER, CENTER);
+        this.sprite2.setScale(1.5);
         this.renderer.addToScreen(this.sprite2);
     }
 

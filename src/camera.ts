@@ -64,10 +64,7 @@ export class Camera {
 	}
 
 	setZoom(zoom: number) {
-		if (zoom <= 0) {
-			console.log("Attempted to set camera zoom to an invalid number:", zoom);
-			return
-		}
+		if (zoom <= 0) return console.log("Attempted to set camera zoom to an invalid number:", zoom);
 		this.#zoom = zoom;
 		this.resize()
 	}
