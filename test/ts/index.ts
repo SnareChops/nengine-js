@@ -1,13 +1,12 @@
-import { Engine } from '../../src/engine';
+import * as nengine from '../../src';
 import { TestScene } from './scene';
 
-const $body = document.querySelector<HTMLBodyElement>('body') as HTMLBodyElement;
-const $canvas = document.createElement('canvas') as HTMLCanvasElement;
-const ctx = $canvas.getContext('2d') as CanvasRenderingContext2D;
+const [canvas, context] = nengine.createCanvas(1920, 1080);
+document.querySelector('body')!!.append(canvas);
 
-$canvas.width = 1920;
-$canvas.height = 1080;
-
-$body.append($canvas);
-
-new Engine(ctx).runGame(new TestScene());
+nengine.enablePanicMode();
+nengine.initSheets([
+    { name: 'FloorTiles', url: 'assets/SpaceShipTiles.png', cellWidth: 32, cellHeight: 32 },
+]).then(() => {
+    new nengine.Engine(context).runGame(new TestScene());
+});

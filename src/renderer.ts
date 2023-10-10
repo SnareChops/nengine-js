@@ -66,8 +66,6 @@ export class Renderer {
                 } else {
                     ctx.drawImage(image, ...item.rawPos(), item.width(), item.height());
                 }
-                ctx.fillStyle = 'blue';
-                ctx.fillRect(...item.vecOf(CENTER, CENTER), 1, 1);
             }
         }
     }

@@ -1,6 +1,9 @@
 import { Game } from './game';
+import { PANIC, SHOULD_PANIC } from './panic';
 
 export class Engine {
+    static [PANIC]: number = 0;
+    static get [SHOULD_PANIC](): boolean { return (Engine[PANIC] & 1) === 1; }
     prev: number = 0;
     game: Game;
 
@@ -19,6 +22,7 @@ export class Engine {
         }
         this.context.reset();
         this.game.draw(this.context);
+        if (Engine[PANIC] === 3) return;
         window.requestAnimationFrame(this.tick.bind(this));
     }
 }
