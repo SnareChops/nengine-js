@@ -1,7 +1,7 @@
-import { Bounds } from './bounds';
-import { createCanvas } from './util';
+import { Bounds } from '../bounds';
+import { createCanvas } from '../util';
 
-interface Font {
+interface PixelFont {
     height: number;
     data: Map<number, Char>;
 }
@@ -11,10 +11,10 @@ interface Char {
     pixels: boolean[];
 }
 
-export let Font5: Font;
-export let Font10: Font;
-export let Font15: Font;
-export let Font20: Font;
+export let Font5: PixelFont;
+export let Font10: PixelFont;
+export let Font15: PixelFont;
+export let Font20: PixelFont;
 
 export async function initFonts() {
     return new Promise<void>((resolve, reject) => {
@@ -33,7 +33,7 @@ export async function initFonts() {
     });
 }
 
-function loadFontFromImage(start: number, height: number, context: CanvasRenderingContext2D): Font {
+function loadFontFromImage(start: number, height: number, context: CanvasRenderingContext2D): PixelFont {
     const font = {
         height: height,
         data: new Map(),
@@ -86,7 +86,7 @@ export function drawString(dest: CanvasRenderingContext2D, x: number, y: number,
     }
 }
 
-export async function imagesForString(text: string, font: Font, color: [number, number, number, number]): Promise<Letter[][]> {
+export async function imagesForString(text: string, font: PixelFont, color: [number, number, number, number]): Promise<Letter[][]> {
     const result: Letter[][] = [];
     let line: Letter[] = [];
     for (let i = 0; i < text.length; i++) {

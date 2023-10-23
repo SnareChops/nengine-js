@@ -153,7 +153,7 @@ export function imagesFromSheet(name: string): ImageBitmap[] | undefined {
 
 // PanicMode: panics if cannot createImageBitmap
 // NormalMode: returns `undefined` if cannot createImageBitmap
-async function extractCellImages(canvas: HTMLCanvasElement | HTMLImageElement, context: CanvasRenderingContext2D, cellWidth: number, cellHeight: number): Promise<ImageBitmap[] | undefined> {
+async function extractCellImages(canvas: HTMLCanvasElement | HTMLImageElement | OffscreenCanvas, context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D, cellWidth: number, cellHeight: number): Promise<ImageBitmap[] | undefined> {
     const cols = canvas.width / cellWidth;
     const rows = canvas.height / cellHeight;
     const images: ImageBitmap[] = [];

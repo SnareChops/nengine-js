@@ -1,18 +1,21 @@
 export * from './animators';
-export * from './assets';
 export * from './bounds';
+export * from './emitters';
+export * from './fonts';
+export * from './utils';
+
+export * from './assets';
 export * from './camera';
 export * from './cursor';
 export * from './debug';
-export * from './engine';
-export * from './font';
 export * from './game';
-export * from './particle';
 export * from './physics';
 export * from './random';
 export * from './renderer';
 export * from './scene';
-export * from './trig';
+export * from './sprite';
 export * from './util';
 
+export { Engine } from './engine';
+export { MouseButton, cursorPosition, cursorDelta, isMouseButtonPressed, isMouseButtonJustPressed, isMouseButtonJustReleased, wheel } from './mouse';
 export { panic, enablePanicMode } from './panic';

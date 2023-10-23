@@ -1,10 +1,9 @@
-
 interface Stat {
 	label: string;
 	value: () => string;
 }
 
-// Debug represents a utility for displaying debug info to the screen
+/** A utility for displaying debug info to the screen */
 export class Debug {
 	#font: string = '';
 	#stats: Stat[] = [];
@@ -17,7 +16,6 @@ export class Debug {
 	addStat(label: string, value: () => string) {
 		this.#stats.push({ label, value });
 	}
-
 	/** Remove a stat from the debug utility (by label) */
 	remove(label: string) {
 		for (let i = 0; i < this.#stats.length; i++) {
@@ -26,8 +24,7 @@ export class Debug {
 			}
 		}
 	}
-
-	// Draw the debug information to the provided image (usually the screen)
+	/** Draw the debug information to the provided context (usually the screen) */
 	draw(screen: CanvasRenderingContext2D) {
 		let s = '';
 		for (const stat of this.#stats) {
@@ -36,5 +33,4 @@ export class Debug {
 		screen.font = this.#font;
 		screen.strokeText(s, 10, 70);
 	}
-
 }

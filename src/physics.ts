@@ -1,4 +1,4 @@
-import { normalizeVector } from './trig';
+import { normalizeVector } from './utils/trig';
 import { isSet } from './util';
 import { Bounds, PhysicsBounds } from './bounds';
 
