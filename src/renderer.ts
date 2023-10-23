@@ -74,6 +74,7 @@ export class Renderer {
     }
     drawSprite(ctx: CanvasRenderingContext2D, sprite: Sprite) {
         const image = sprite.image();
+        if (!image) return;
         if (sprite.rotation() != 0) {
             ctx.translate(...sprite.mid());
             ctx.rotate(sprite.rotation());
