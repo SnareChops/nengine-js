@@ -1,5 +1,5 @@
 import { Camera } from './camera';
-import { Debug } from './debug';
+import { debugDraw, debugEnabled, debugPaths, debugStat } from './debug';
 import { cursorPosition } from './mouse';
 import { Sprite } from './sprite';
 
@@ -16,22 +16,18 @@ export class Renderer {
     #background: Sprite[] = [];
     #screen: Sprite[] = [];
     #world: Sprite[] = [];
-    #debug: Debug | undefined;
     #camera: Camera;
 
-    constructor(viewWidth: number, viewHeight: number, worldWidth: number = viewWidth, worldHeight: number = viewHeight, debug?: Debug) {
+    constructor(viewWidth: number, viewHeight: number, worldWidth: number = viewWidth, worldHeight: number = viewHeight) {
         this.#camera = new Camera(viewWidth, viewHeight, worldWidth, worldHeight);
-        this.#debug = debug;
-        if (!!debug) {
-            debug.addStat('Screen', () => {
-                const [x, y] = cursorPosition();
-                return `${x}, ${y}`;
-            });
-            debug.addStat('World', () => {
-                const [x, y] = this.cursorWorldPosition();
-                return `${x.toFixed(2)}, ${y.toFixed(2)}`;
-            });
-        }
+        debugStat('Screen', () => {
+            const [x, y] = cursorPosition();
+            return `${x}, ${y}`;
+        });
+        debugStat('World', () => {
+            const [x, y] = this.cursorWorldPosition();
+            return `${x.toFixed(2)}, ${y.toFixed(2)}`;
+        });
     }
 
     /** Gets the world position of the cursor */
@@ -98,12 +94,24 @@ export class Renderer {
         for (const item of this.#world) {
             this.drawSprite(ctx, item);
         }
+        if (debugEnabled()) {
+            for (const path of debugPaths().values()) {
+                ctx.moveTo(...this.#camera.worldToScreenPos(...path.points[0].xy()));
+                for (let i = 1; i < path.points.length; i++) {
+                    ctx.lineTo(...this.#camera.worldToScreenPos(...path.points[i].xy()));
+                }
+                ctx.strokeStyle = path.color.hex();
+                ctx.lineWidth = 3;
+                ctx.stroke();
+            }
+        }
         // Draw screen layer
         this.#screen.sort((a, b) => a.z() - b.z());
         for (const item of this.#screen) {
             this.drawSprite(ctx, item);
         }
+
         // Draw debug layer
-        if (!!this.#debug) this.#debug.draw(ctx);
+        debugDraw(ctx);
     }
 }

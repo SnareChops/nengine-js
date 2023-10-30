@@ -1,19 +1,19 @@
-import { RawBounds, LEFT, CENTER, createCanvas } from '../../src';
+import { RawBounds, LEFT, CENTER, createCanvas, Color } from '../../src';
 
 export abstract class Bar extends RawBounds {
     barImage: CanvasImageSource;
     barContext: OffscreenCanvasRenderingContext2D;
 
-    color: string;
-    currentValue: number;
+    color: Color;
+    currentValue: number = 0;
 
     bounds: Array<number> = new Array<number>(2);
 
-    constructor(w: number, h: number, color: string) {
+    constructor(w: number, h: number, color: Color) {
         super(w, h);
 
         this.color = color;
-        [this.barImage, this.barContext] = createCanvas(w, h)
+        [this.barImage, this.barContext] = createCanvas(w, h);
 
         this.setAnchor(LEFT, CENTER);
     }
@@ -22,7 +22,7 @@ export abstract class Bar extends RawBounds {
         this.barContext.reset();
 
         this.barContext.rect(0, 0, this.bounds[1], this.height());
-        this.barContext.fillStyle = this.color;
+        this.barContext.fillStyle = this.color.hex();
         this.barContext.fill();
 
         this.barContext.lineWidth = 5;
@@ -35,7 +35,7 @@ export abstract class Bar extends RawBounds {
 
 export class DynamicBar extends Bar {
 
-    constructor(w: number, h: number, color: string) {
+    constructor(w: number, h: number, color: Color) {
         super(w, h, color);
 
         this.bounds = [0, 255];
@@ -46,7 +46,7 @@ export class DynamicBar extends Bar {
     render(): void {
         this.barContext.reset();
         this.barContext.rect(0, 0, this.currentValue, this.height());
-        this.barContext.fillStyle = this.color;
+        this.barContext.fillStyle = this.color.hex();
         this.barContext.fill();
 
         this.barContext.lineWidth = 5;

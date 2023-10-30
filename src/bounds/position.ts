@@ -3,9 +3,9 @@
  */
 export interface Position {
     pos2(): [x: number, y: number];
-    setPos2(x: number, y: number);
+    setPos2(x: number, y: number): void;
     pos3(): [x: number, y: number, z: number];
-    setPos3(x: number, y: number, z: number);
+    setPos3(x: number, y: number, z: number): void;
     x(x?: number): number;
     y(y?: number): number;
     z(z?: number): number;
@@ -13,14 +13,6 @@ export interface Position {
     yz(y?: number, z?: number): [y: number, z: number];
     xz(x?: number, z?: number): [x: number, z: number];
     xyz(x?: number, y?: number, z?: number): [x: number, y: number, z: number];
-    /** @deprecated use pos2() or xy() instead */
-    vec2(): [x: number, y: number];
-    /** @deprecated use setPos2() or xy() instead */
-    setVec2(x: number, y: number);
-    /** @deprecated use pos3() or xyz() instead */
-    vec3(): [x: number, y: number, z: number];
-    /** @deprecated use setPos3() or xyz() instead */
-    setPos3(x: number, y: number, z: number);
 }
 
 export class Point {
@@ -28,14 +20,6 @@ export class Point {
     protected Y: number = 0;
     protected Z: number = 0;
 
-    /** @deprecated use pos2() or xy() instead */
-    vec2 = this.pos2;
-    /** @deprecated use setPos2() or xy() instead */
-    setVec2 = this.setPos2;
-    /** @deprecated use pos3() or xyz() instead */
-    vec3 = this.pos3;
-    /** @deprecated use setPos3() or xyz() instead */
-    setVec3 = this.setPos3;
     /** pos2 returns the x and y components of the point */
     pos2(): [x: number, y: number] {
         return [this.X, this.Y];

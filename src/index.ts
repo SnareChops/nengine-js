@@ -1,11 +1,13 @@
 export * from './animators';
 export * from './bounds';
+export * from './debug';
 export * from './emitters';
 export * from './fonts';
 export * from './utils';
 
 export * from './assets';
 export * from './camera';
+export * from './color';
 export * from './cursor';
 export * from './debug';
 export * from './game';
@@ -14,6 +16,7 @@ export * from './random';
 export * from './renderer';
 export * from './scene';
 export * from './sprite';
+export * from './timer';
 export * from './util';
 
 export { Engine } from './engine';

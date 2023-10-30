@@ -5,7 +5,7 @@ import { TestSprite } from './sprite';
 export class TestScene {
     sprite: nengine.Sprite = new TestSprite();
     sprite2: nengine.Sprite = new TestSprite();
-    bar: nengine.Sprite = new DynamicBar(250, 25, 'red');
+    bar: nengine.Sprite = new DynamicBar(250, 25, new nengine.Color(255, 0, 0, 255));
     renderer: nengine.Renderer = new nengine.Renderer(1920, 1080);
 
     constructor() {

@@ -1,4 +1,5 @@
 import { Bounds } from '../bounds';
+import { Color } from '../color';
 import { createCanvas } from '../util';
 
 interface PixelFont {
@@ -22,7 +23,7 @@ export async function initFonts() {
         png.src = `assets/Fonts.png`;
         png.addEventListener('load', event => {
             const image = event.target as HTMLImageElement;
-            const [canvas, context] = createCanvas(image.naturalWidth, image.naturalHeight);
+            const [_, context] = createCanvas(image.naturalWidth, image.naturalHeight);
             context.drawImage(image, 0, 0);
             Font5 = loadFontFromImage(1, 5, context);
             Font10 = loadFontFromImage(7, 10, context);
@@ -33,14 +34,14 @@ export async function initFonts() {
     });
 }
 
-function loadFontFromImage(start: number, height: number, context: CanvasRenderingContext2D): PixelFont {
+function loadFontFromImage(start: number, height: number, context: OffscreenCanvasRenderingContext2D): PixelFont {
     const font = {
         height: height,
         data: new Map(),
     };
     let cursor = 0;
     for (let ascii = 32; ascii < 127; ascii++) {
-        cursor += 1
+        cursor += 1;
         const begin = cursor;
         while (true) {
             const [r, g, b, a] = context.getImageData(cursor, start, 1, 1).data;
@@ -55,7 +56,7 @@ function loadFontFromImage(start: number, height: number, context: CanvasRenderi
     return font;
 }
 
-function extractPixels(context: CanvasRenderingContext2D, x1: number, y1: number, x2: number, y2: number): boolean[] {
+function extractPixels(context: OffscreenCanvasRenderingContext2D, x1: number, y1: number, x2: number, y2: number): boolean[] {
     const result: boolean[] = [];
     for (let y = y1; y < y2; y++) {
         for (let x = x1; x < x2; x++) {
@@ -72,7 +73,7 @@ export interface Letter {
 }
 
 export function drawStringBlock(dest: CanvasRenderingContext2D, bounds: Bounds, kerning: number, leading: number, lines: Letter[][]) {
-    const [x, y] = bounds.vec2();
+    const [x, y] = bounds.xy();
     for (let i = 0; i < lines.length; i++) {
         drawString(dest, x, y + (i * (leading + lines[i][0].image.height)), kerning, lines[i]);
     }
@@ -86,7 +87,7 @@ export function drawString(dest: CanvasRenderingContext2D, x: number, y: number,
     }
 }
 
-export async function imagesForString(text: string, font: PixelFont, color: [number, number, number, number]): Promise<Letter[][]> {
+export async function imagesForString(text: string, font: PixelFont, color: Color): Promise<Letter[][]> {
     const result: Letter[][] = [];
     let line: Letter[] = [];
     for (let i = 0; i < text.length; i++) {
@@ -102,8 +103,8 @@ export async function imagesForString(text: string, font: PixelFont, color: [num
         }
         const c = font.data.get(char);
         if (!!c) {
-            const pixels = pixelsForLetter(font.height, c.pixels, color)
-            const bitmap = await createImageBitmap(new ImageData(pixels, c.width))
+            const pixels = pixelsForLetter(font.height, c.pixels, color);
+            const bitmap = await createImageBitmap(new ImageData(pixels, c.width));
             line.push({ image: bitmap, char: char });
         }
     }
@@ -113,14 +114,14 @@ export async function imagesForString(text: string, font: PixelFont, color: [num
     return result;
 }
 
-function pixelsForLetter(width: number, pixels: boolean[], color: [number, number, number, number]): Uint8ClampedArray {
+function pixelsForLetter(width: number, pixels: boolean[], color: Color): Uint8ClampedArray {
     const letter = new Uint8ClampedArray(pixels.length * 4);
     for (let i = 0; i < pixels.length; i++) {
         if (pixels[i]) {
-            letter[i * 4] = color[0];
-            letter[i * 4 + 1] = color[1];
-            letter[i * 4 + 2] = color[2];
-            letter[i * 4 + 3] = color[3];
+            letter[i * 4] = color.r();
+            letter[i * 4 + 1] = color.g();
+            letter[i * 4 + 2] = color.b();
+            letter[i * 4 + 3] = color.a();
         }
     }
     return letter;

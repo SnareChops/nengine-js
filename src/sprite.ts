@@ -20,7 +20,7 @@ export interface Sprite extends Bounds {
  * Sprite interface on your own instead of using this
  */
 export class SimpleSprite extends RawBounds {
-    #image: CanvasImageSource;
+    #image: CanvasImageSource | undefined;
     /** Init sets the initial state of the SimpleStruct */
     constructor(image: string | Image) {
         super(0, 0);
@@ -37,7 +37,7 @@ export class SimpleSprite extends RawBounds {
             this.setSize(image.width, image.height);
         }
     }
-    image(): CanvasImageSource {
+    image(): CanvasImageSource | undefined {
         return this.#image;
     }
 }

@@ -5,11 +5,11 @@ import { linearInterpolate } from '../utils/trig';
 export class Uniform extends RawBounds {
     #particles: Particle[];
     #active: Particle[];
-    #velocity: number;
-    #minAngle: number;
-    #maxAngle: number;
-    #life: number;
-    #density: number;
+    #velocity: number = 0;
+    #minAngle: number = 0;
+    #maxAngle: number = 0;
+    #life: number = 0;
+    #density: number = 0;
 
     constructor(particles: Particle[]) {
         super(0, 0);
@@ -42,7 +42,7 @@ export class Uniform extends RawBounds {
         for (let i = 0; i < this.#density; i++) {
             for (const particle of this.#particles) {
                 if (particle.duration() > 0) {
-                    continue
+                    continue;
                 }
                 const percent = i / this.#density;
                 const angle = linearInterpolate(this.#minAngle, this.#maxAngle, percent);
@@ -53,10 +53,10 @@ export class Uniform extends RawBounds {
                 for (const [i, active] of this.#active.entries()) {
                     if (!active) {
                         this.#active[i] = particle;
-                        break
+                        break;
                     }
                 }
-                break
+                break;
             }
         }
     }
@@ -70,7 +70,7 @@ export class Uniform extends RawBounds {
                 this.#active[i].despawn();
                 this.#active.splice(i, 1);
             } else {
-                i += 1
+                i += 1;
             }
         }
     }

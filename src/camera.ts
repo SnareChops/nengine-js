@@ -9,7 +9,7 @@ export class Camera {
 	#vh: number = 0;
 	#ww: number = 0;
 	#wh: number = 0;
-	#rect: [x: number, y: number, w: number, h: number];
+	#rect: [x: number, y: number, w: number, h: number] = [0, 0, 0, 0];
 	#zoom: number = 1;
 	#canvas: OffscreenCanvas;
 	#context: OffscreenCanvasRenderingContext2D;

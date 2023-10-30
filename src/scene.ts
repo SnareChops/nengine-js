@@ -1,4 +1,4 @@
 export interface Scene {
-    update(delta: number);
-    draw(ctx: CanvasRenderingContext2D);
+    update(delta: number): void;
+    draw(ctx: CanvasRenderingContext2D): void;
 }

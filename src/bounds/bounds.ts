@@ -24,15 +24,15 @@ export interface Bounds extends Position {
      * horizontal: {@link LEFT}, {@link RIGHT}, or {@link CENTER}
      * vertical: {@link TOP}, {@link BOTTOM}, or {@link CENTER}
      */
-    setAnchor(h: number, v: number);
+    setAnchor(h: number, v: number): void;
     /** Gets the relative x,y offset of the bounds */
     offset(): [x: number, y: number];
     /** Sets the relative x,y offset of the bounds */
-    setOffset(x: number, y: number);
+    setOffset(x: number, y: number): void;
     /** Gets the width,height of the bounds */
     size(): [width: number, height: number];
     /** Sets the width,height of the bounds */
-    setSize(w: number, h: number);
+    setSize(w: number, h: number): void;
     /**
      * Gets the width of the bounds 
      * @alias dx
@@ -50,11 +50,11 @@ export interface Bounds extends Position {
     /** Gets the rotation of the bounds (in radians) */
     rotation(): number;
     /** Sets the rotation of the bounds (in radians) */
-    setRotation(radians: number);
+    setRotation(radians: number): void;
     /** Gets the scale of the bounds, as float percentage */
     scale(): number;
     /** Sets the scale of the bounds, as float percentage */
-    setScale(scale: number);
+    setScale(scale: number): void;
     /**
      * Scales the bounds to fit within the provided width,height
      * returns the actual width,height after scaling
@@ -74,8 +74,5 @@ export interface Bounds extends Position {
      */
     normalVectorOf(edge: number): [x: number, y: number];
     /** Checks if the provided bounds overlaps (touches) this bounds */
-    doesCollide(Bounds): boolean
-
-    /** @deprecated use posOf() instead */
-    vecOf(h: number, v: number): [x: number, y: number];
+    doesCollide(other: Bounds): boolean;
 }

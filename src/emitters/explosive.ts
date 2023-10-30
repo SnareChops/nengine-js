@@ -1,18 +1,19 @@
 import { RawBounds } from '../bounds';
+import { panic } from '../panic';
 import * as random from '../random';
 import { Particle } from './particle';
 
 export class Explosive extends RawBounds {
     #particles: Particle[];
     #active: Particle[];
-    #minVelocity: number;
-    #maxVelocity: number;
-    #minAngle: number;
-    #maxAngle: number;
-    #minLife: number;
-    #maxLife: number;
-    #density: number; // How many particles to emit per 10ms
-    #duration: number; // How long to emit for
+    #minVelocity: number = 0;
+    #maxVelocity: number = 0;
+    #minAngle: number = 0;
+    #maxAngle: number = 0;
+    #minLife: number = 0;
+    #maxLife: number = 0;
+    #density: number = 0; // How many particles to emit per 10ms
+    #duration: number = 0; // How long to emit for
 
     constructor(particles: Particle[]) {
         super(0, 0);
@@ -31,6 +32,9 @@ export class Explosive extends RawBounds {
     }
     /** Sets the liftime range for the emitted particles */
     setLife(min: number, max: number) {
+        if (min <= 0 || max <= 0) {
+            panic("Life must be greater than 0");
+        }
         this.#minLife = min;
         this.#maxLife = max;
     }
@@ -63,23 +67,23 @@ export class Explosive extends RawBounds {
         let desired = (delta / 10) * this.#density;
         for (const particle of this.#particles) {
             if (particle.duration() > 0) {
-                particle.update(delta)
+                particle.update(delta);
                 if (particle.duration() <= 0) {
                     this.#remove(particle);
                 }
             } else {
                 if (desired > 0 && this.#duration > 0) {
                     particle.xy(...this.xy());
-                    particle.setDuration(random.intn(this.#maxLife - this.#minLife) + this.#minLife)
+                    particle.setDuration(random.intn(this.#maxLife - this.#minLife) + this.#minLife);
                     particle.setVelocity(
                         random.floatn(this.#maxAngle - this.#minAngle) + this.#minAngle,
                         random.floatn(this.#maxVelocity - this.#minVelocity) + this.#minVelocity,
-                    )
-                    particle.spawn()
+                    );
+                    particle.spawn();
                     for (const [i, active] of this.#active.entries()) {
                         if (!active) this.#active[i] = particle;
                     }
-                    desired -= 1
+                    desired -= 1;
                 }
             }
         }

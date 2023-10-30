@@ -6,18 +6,18 @@ import { PhysicsBounds } from '../bounds';
  * can be used to assist with creating particles
  */
 export interface Particle extends PhysicsBounds {
-    update(delta: number);
+    update(delta: number): void;
     duration(): number;
-    setDuration(ms: number);
-    spawn();
-    despawn();
+    setDuration(ms: number): void;
+    spawn(): void;
+    despawn(): void;
 }
 /**
  * A utility class that can be used to facilitate in
  * creating particles
  */
 export class ParticleBase extends PhysicsBounds {
-    #duration: number;
+    #duration: number = 0;
 
     constructor(width: number = 0, height: number = 0) {
         super(width, height);

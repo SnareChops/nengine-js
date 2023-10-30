@@ -1,5 +1,5 @@
 export interface Animator {
-    start(name: string);
-    update(delta: number);
+    start(name: string): void;
+    update(delta: number): void;
     image(): CanvasRenderingContext2D;
 }

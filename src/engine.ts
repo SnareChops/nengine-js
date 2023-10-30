@@ -1,5 +1,5 @@
 import { Game } from './game';
-import { PANIC, SHOULD_PANIC } from './panic';
+import { PANIC, SHOULD_PANIC, panic } from './panic';
 import { MOUSE, MouseInfo, mouseInit } from './mouse';
 
 export const CONTEXT = Symbol('CONTEXT');
@@ -10,7 +10,7 @@ export class Engine {
     static [CONTEXT]: CanvasRenderingContext2D;
     static [MOUSE]: MouseInfo = mouseInit();
     prev: number = 0;
-    game: Game;
+    game: Game | undefined;
 
     constructor(private context: CanvasRenderingContext2D) {
         if (!!Engine[CONTEXT]) throw new Error('Nengine only supports using 1 canvas, and only 1 active engine.');
@@ -29,11 +29,13 @@ export class Engine {
     }
 
     runGame(game: Game) {
+        if (!game) return panic("Invalid game");
         this.game = game;
         window.requestAnimationFrame(this.tick.bind(this));
     }
 
     tick(timestamp: number) {
+        if (!this.game) return panic("Missing game");
         const delta = timestamp - this.prev;
         this.prev = timestamp;
         if (delta > 0) {

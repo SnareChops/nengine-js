@@ -3,15 +3,6 @@ import { cursorDelta, cursorPosition, isMouseButtonJustPressed, isMouseButtonJus
 export class Cursor {
 	#captured: boolean = false;
 
-	/** @deprecated use cursorPosition() from nengine root instead */
-	screenPos(): [number, number] {
-		return cursorPosition();
-	}
-
-	/** @deprecated use cursorDelta() from nengine root instead */
-	deltaScreenPos(): [number, number] {
-		return cursorDelta();
-	}
 	/**
 	 * "Capture" the cursor.
 	 * This is useful for preventing multiple different parts
@@ -32,22 +23,6 @@ export class Cursor {
 	/** Checks if the cursor has already been captured this frame */
 	captured(): boolean {
 		return this.#captured;
-	}
-	/** @deprecated use isMouseButtonPressed from nengine root instead */
-	isMouseButtonPressed(button: MouseButton): boolean {
-		return isMouseButtonPressed(button);
-	}
-	/** @deprecated use isMouseButtonJustPressed from nengine root instead */
-	isMouseButtonJustPressed(button: MouseButton): boolean {
-		return isMouseButtonJustPressed(button);
-	}
-	/** @deprecated use isMouseButtonJustReleased() from nengine root instead */
-	isMouseButtonJustReleased(button: MouseButton): boolean {
-		return isMouseButtonJustReleased(button);
-	}
-	/** @deprecated use wheel() from nengine root instead */
-	wheel(): [x: number, y: number] {
-		return wheel();
 	}
 	/** Updates the cursor state. This must be called to used the capture feature. */
 	update() {

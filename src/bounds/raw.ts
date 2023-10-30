@@ -15,8 +15,6 @@ export class Raw extends Point {
         this.#height = height;
     }
 
-    /** @deprecated use posOf() instead */
-    vecOf = this.posOf;
     /**
      * Gets the absolute x,y position of the provided anchor point
      * horizontal: {@link LEFT}, {@link RIGHT}, {@link CENTER}
@@ -150,7 +148,7 @@ export class Raw extends Point {
     }
     /** Gets the minmum absolute x,y position of the bounds */
     min(): [x: number, y: number] {
-        return this.rawPos()
+        return this.rawPos();
     }
     /** Gets the absolute x,y position at the midpoint of the bounds */
     mid(): [x: number, y: number] {
@@ -177,13 +175,13 @@ export class Raw extends Point {
     normalVectorOf(edge: number): [number, number] {
         switch (edge) {
             case LEFT:
-                return [-1, 0]
+                return [-1, 0];
             case TOP:
-                return [0, -1]
+                return [0, -1];
             case RIGHT:
-                return [1, 0]
+                return [1, 0];
             case BOTTOM:
-                return [0, 1]
+                return [0, 1];
             default:
                 throw new Error('Invalid edge');
         }

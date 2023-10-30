@@ -17,11 +17,11 @@ interface Frame {
  */
 export class FrameByFrameAnimator {
 	#frames: CanvasImageSource[] = [];
-	#animations: Map<string, { start: number, duration: number, frame: number }[]> = new Map();
+	#animations: Map<string, { start: number, duration: number, frame: number; }[]> = new Map();
 	#active: Frame[] | undefined;
-	#frame: number;
-	#elapsed: number;
-	#loop: boolean;
+	#frame: number = 0;
+	#elapsed: number = 0;
+	#loop: boolean = false;
 
 	/** addAnimation Adds a new named animation to the Animator */
 	addAnimation(name: string, animation: AnimationFrame[]): this {
@@ -45,8 +45,8 @@ export class FrameByFrameAnimator {
 	/** startAnimation Starts an animation by it's name */
 	startAnimation(name: string, loop: boolean) {
 		this.#active = this.#animations.get(name);
-		this.#loop = loop
-		this.#elapsed = 0
+		this.#loop = loop;
+		this.#elapsed = 0;
 	}
 
 	/** image Returns the current active image for the animation */
@@ -61,7 +61,7 @@ export class FrameByFrameAnimator {
 		const total = last.start + last.duration;
 		this.#elapsed += delta;
 		if (this.#elapsed >= total && !this.#loop) {
-			this.clearAnimation()
+			this.clearAnimation();
 		}
 		this.#elapsed %= total;
 		for (const frame of this.#active) {
