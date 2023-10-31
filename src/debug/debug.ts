@@ -69,7 +69,7 @@ export function debugPaths(): Map<any, path> {
  * If using the MainRenderer, this will be drawn automatically
  */
 export function debugDraw(screen: CanvasRenderingContext2D) {
-    if (!debugEnabled) return;
+    if (!_debugEnabled) return;
     let s = '';
     for (const stat of _debugStats.values()) {
         if (!!stat.value) s += `${stat.label}: ${stat.value()}\n`;
