@@ -1,4 +1,5 @@
-import { createCanvas } from "../util";
+import { createCanvas } from '..';
+import { Image } from '../image';
 
 /**
  * ImageChunk represents a chunk of an image that
@@ -13,7 +14,6 @@ export interface ImageChunk {
     height: number;
     image: OffscreenCanvas;
 }
-export type Image = HTMLImageElement | HTMLVideoElement | HTMLCanvasElement | ImageBitmap | OffscreenCanvas;
 export function chunkImage(img: Image, size: number): ImageChunk[] {
 
     // Obtain the size of the image
@@ -32,8 +32,7 @@ export function chunkImage(img: Image, size: number): ImageChunk[] {
             if (y + size > height) subHeight = height - y;
             else subHeight = size;
 
-            const subImg = new OffscreenCanvas(subWidth, subHeight);
-            const context = subImg.getContext('2d')!!;
+            const [subImg, context] = createCanvas(subWidth, subHeight);
 
             // Draw the sub-image onto the new image
             context.drawImage(img, -x, -y);
@@ -48,5 +47,5 @@ export function chunkImage(img: Image, size: number): ImageChunk[] {
             });
         }
     }
-    return newImages
+    return newImages;
 }

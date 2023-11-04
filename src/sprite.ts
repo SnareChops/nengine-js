@@ -1,14 +1,14 @@
 import { loadImage } from './assets';
 import { Bounds, RawBounds } from './bounds';
+import { Image } from './image';
 import { panic } from './panic';
-import { Image } from './utils';
 
 /**
  * Implement this interface to form a "sprite" that
  * the renderer can draw automatically
  */
 export interface Sprite extends Bounds {
-    image(): CanvasImageSource;
+    image(): Image;
 }
 
 /**
@@ -20,7 +20,7 @@ export interface Sprite extends Bounds {
  * Sprite interface on your own instead of using this
  */
 export class SimpleSprite extends RawBounds {
-    #image: CanvasImageSource | undefined;
+    #image: Image | undefined;
     /** Init sets the initial state of the SimpleStruct */
     constructor(image: string | Image) {
         super(0, 0);
@@ -37,7 +37,7 @@ export class SimpleSprite extends RawBounds {
             this.setSize(image.width, image.height);
         }
     }
-    image(): CanvasImageSource | undefined {
+    image(): Image | undefined {
         return this.#image;
     }
 }

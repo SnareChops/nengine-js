@@ -1,3 +1,4 @@
+import { Context, Image } from './image';
 import { createCanvas } from './util';
 import { clamp } from './utils';
 
@@ -11,8 +12,8 @@ export class Camera {
 	#wh: number = 0;
 	#rect: [x: number, y: number, w: number, h: number] = [0, 0, 0, 0];
 	#zoom: number = 1;
-	#canvas: OffscreenCanvas;
-	#context: OffscreenCanvasRenderingContext2D;
+	#canvas: Image;
+	#context: Context;
 
 	constructor(viewWidth: number, viewHeight: number, worldWidth: number, worldHeight: number) {
 		this.#zoom = 1;
@@ -52,7 +53,7 @@ export class Camera {
 		this.#resize();
 	}
 	/** Returns the image visible within the camera */
-	image(source: CanvasImageSource): CanvasImageSource {
+	image(source: Image): Image {
 		this.#context.reset();
 		this.#context.drawImage(source, ...this.view(), 0, 0, this.#vw * this.#zoom, this.#vh * this.#zoom);
 		return this.#canvas;

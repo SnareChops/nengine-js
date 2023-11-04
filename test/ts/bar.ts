@@ -1,8 +1,8 @@
-import { RawBounds, LEFT, CENTER, createCanvas, Color } from '../../src';
+import { RawBounds, LEFT, CENTER, createCanvas, Color, Image, Context } from '../../src';
 
 export abstract class Bar extends RawBounds {
-    barImage: CanvasImageSource;
-    barContext: OffscreenCanvasRenderingContext2D;
+    barImage: Image;
+    barContext: Context;
 
     color: Color;
     currentValue: number = 0;
@@ -58,7 +58,7 @@ export class DynamicBar extends Bar {
         this.currentValue = value;
     }
 
-    image(): CanvasImageSource {
+    image(): Image {
         return this.barImage;
     }
 }

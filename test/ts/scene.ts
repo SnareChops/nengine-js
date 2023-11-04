@@ -29,7 +29,7 @@ export class TestScene {
         this.sprite2.setRotation(this.sprite2.rotation() + Math.PI / 8 * (delta / 1000));
     }
 
-    draw(screen: CanvasRenderingContext2D) {
+    draw(screen: nengine.Context) {
         this.renderer.draw(screen);
     }
 }

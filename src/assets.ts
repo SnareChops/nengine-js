@@ -1,3 +1,4 @@
+import { Context } from './image';
 import { panic } from './panic';
 import { createCanvas } from './util';
 
@@ -50,7 +51,7 @@ export async function initSheets(sheets: NamedSheet[]): Promise<void> {
         const cellHeight = sheets[i].cellHeight;
         const [canvas, context] = createCanvas(image.width, image.height, true);
         context.drawImage(image, 0, 0);
-        const images = await extractCellImages(canvas, context, cellWidth, cellHeight)
+        const images = await extractCellImages(canvas, context, cellWidth, cellHeight);
         if (!images) continue;
         sheetCache.set(sheets[i].name, { cellWidth, cellHeight, images });
     }
@@ -71,7 +72,7 @@ export async function loadImage(url: string): Promise<HTMLImageElement | undefin
         image.onerror = (event, source, lineno, colno, err) => {
             panic('Error loading image', err, `${source}:${lineno}:${colno}`, event);
             resolve(void 0);
-        }
+        };
         image.addEventListener('load', event => resolve(event.target as HTMLImageElement));
     });
 }
@@ -153,7 +154,7 @@ export function imagesFromSheet(name: string): ImageBitmap[] | undefined {
 
 // PanicMode: panics if cannot createImageBitmap
 // NormalMode: returns `undefined` if cannot createImageBitmap
-async function extractCellImages(canvas: HTMLCanvasElement | HTMLImageElement | OffscreenCanvas, context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D, cellWidth: number, cellHeight: number): Promise<ImageBitmap[] | undefined> {
+async function extractCellImages(canvas: HTMLCanvasElement | HTMLImageElement | OffscreenCanvas, context: Context, cellWidth: number, cellHeight: number): Promise<ImageBitmap[] | undefined> {
     const cols = canvas.width / cellWidth;
     const rows = canvas.height / cellHeight;
     const images: ImageBitmap[] = [];

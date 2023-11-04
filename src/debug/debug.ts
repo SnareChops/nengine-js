@@ -1,5 +1,6 @@
 import { Position } from '../bounds';
 import { Color } from '../color';
+import { Context } from '../image';
 
 let _debugEnabled: boolean = false;
 let _debugFont: string = 'sans-serif';
@@ -68,7 +69,7 @@ export function debugPaths(): Map<any, path> {
  * Draw the debug information to the provided image (usually the screen)
  * If using the MainRenderer, this will be drawn automatically
  */
-export function debugDraw(screen: CanvasRenderingContext2D) {
+export function debugDraw(screen: Context) {
     if (!_debugEnabled) return;
     let s = '';
     for (const stat of _debugStats.values()) {

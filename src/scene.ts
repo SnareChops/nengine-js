@@ -1,4 +1,6 @@
+import { Context } from './image';
+
 export interface Scene {
     update(delta: number): void;
-    draw(ctx: CanvasRenderingContext2D): void;
+    draw(ctx: Context): void;
 }

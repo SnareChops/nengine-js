@@ -1,5 +1,6 @@
 import { Camera } from './camera';
 import { debugDraw, debugEnabled, debugPaths, debugStat } from './debug';
+import { Context } from './image';
 import { cursorPosition } from './mouse';
 import { Sprite } from './sprite';
 
@@ -68,7 +69,7 @@ export class Renderer {
     setCameraPos(x: number, y: number) {
         this.#camera.setPos(x, y);
     }
-    drawSprite(ctx: CanvasRenderingContext2D, sprite: Sprite) {
+    drawSprite(ctx: Context, sprite: Sprite) {
         const image = sprite.image();
         if (!image) return;
         if (sprite.rotation() != 0) {
@@ -84,7 +85,7 @@ export class Renderer {
      * Draw the result of the Renderer processing to the provided image
      * (usually the screen)
      */
-    draw(ctx: CanvasRenderingContext2D) {
+    draw(ctx: Context) {
         this.#background.sort((a, b) => a.z() - b.z());
         for (const item of this.#background) {
             this.drawSprite(ctx, item);

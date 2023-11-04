@@ -1,3 +1,4 @@
+import { Context } from '../image';
 import { Bounds } from '../bounds';
 import { Color } from '../color';
 import { createCanvas } from '../util';
@@ -34,7 +35,7 @@ export async function initFonts() {
     });
 }
 
-function loadFontFromImage(start: number, height: number, context: OffscreenCanvasRenderingContext2D): PixelFont {
+function loadFontFromImage(start: number, height: number, context: Context): PixelFont {
     const font = {
         height: height,
         data: new Map(),
@@ -56,7 +57,7 @@ function loadFontFromImage(start: number, height: number, context: OffscreenCanv
     return font;
 }
 
-function extractPixels(context: OffscreenCanvasRenderingContext2D, x1: number, y1: number, x2: number, y2: number): boolean[] {
+function extractPixels(context: Context, x1: number, y1: number, x2: number, y2: number): boolean[] {
     const result: boolean[] = [];
     for (let y = y1; y < y2; y++) {
         for (let x = x1; x < x2; x++) {
@@ -72,14 +73,14 @@ export interface Letter {
     char: number;
 }
 
-export function drawStringBlock(dest: CanvasRenderingContext2D, bounds: Bounds, kerning: number, leading: number, lines: Letter[][]) {
+export function drawStringBlock(dest: Context, bounds: Bounds, kerning: number, leading: number, lines: Letter[][]) {
     const [x, y] = bounds.xy();
     for (let i = 0; i < lines.length; i++) {
         drawString(dest, x, y + (i * (leading + lines[i][0].image.height)), kerning, lines[i]);
     }
 }
 
-export function drawString(dest: CanvasRenderingContext2D, x: number, y: number, kerning: number, letters: Letter[]) {
+export function drawString(dest: Context, x: number, y: number, kerning: number, letters: Letter[]) {
     let cursor = 0;
     for (const letter of letters) {
         dest.drawImage(letter.image, x + cursor, y);

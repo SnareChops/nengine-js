@@ -1,8 +1,10 @@
+import { Image } from '../image';
+
 // FrameAnimation represents timings for a single animation frame
 export interface AnimationFrame {
 	start: number;
 	duration: number;
-	frame: CanvasImageSource;
+	frame: Image;
 }
 
 interface Frame {
@@ -16,7 +18,7 @@ interface Frame {
  * Tip: Use in combination with Bounds to create an animated sprite
  */
 export class FrameByFrameAnimator {
-	#frames: CanvasImageSource[] = [];
+	#frames: Image[] = [];
 	#animations: Map<string, { start: number, duration: number, frame: number; }[]> = new Map();
 	#active: Frame[] | undefined;
 	#frame: number = 0;
@@ -50,7 +52,7 @@ export class FrameByFrameAnimator {
 	}
 
 	/** image Returns the current active image for the animation */
-	image(): CanvasImageSource {
+	image(): Image {
 		return this.#frames[this.#frame];
 	}
 
