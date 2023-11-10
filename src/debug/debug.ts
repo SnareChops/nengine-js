@@ -1,6 +1,6 @@
-import { Position } from '../bounds';
 import { Color } from '../color';
 import { Context } from '../image';
+import { Position } from '../types/position';
 
 let _debugEnabled: boolean = false;
 let _debugFont: string = 'sans-serif';

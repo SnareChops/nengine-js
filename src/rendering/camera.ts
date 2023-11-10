@@ -1,6 +1,8 @@
-import { Context, Image } from './image';
-import { createCanvas } from './util';
-import { clamp } from './utils';
+import { cursorPosition } from '..';
+import { Context, Image } from '../image';
+import { Entity } from '../types/entity';
+import { createCanvas } from '../util';
+import { clamp } from '../utils';
 
 /** Camera represents a virtual camera for use by the Renderer */
 export class Camera {
@@ -14,6 +16,7 @@ export class Camera {
 	#zoom: number = 1;
 	#canvas: Image;
 	#context: Context;
+	#target: Entity | undefined;
 
 	constructor(viewWidth: number, viewHeight: number, worldWidth: number, worldHeight: number) {
 		this.#zoom = 1;
@@ -22,41 +25,44 @@ export class Camera {
 		this.#ww = worldWidth;
 		this.#wh = worldHeight;
 		[this.#canvas, this.#context] = createCanvas(viewWidth, viewHeight);
-		this.setPos(0, 0);
+		this.setCameraPos(0, 0);
 	}
 	/** Gets the position of the camera */
-	pos(): [number, number] {
+	cameraPos(): [number, number] {
 		return [this.#x, this.#y];
 	}
-
 	/** Sets the position of the Camera */
-	setPos(x: number, y: number) {
+	setCameraPos(x: number, y: number) {
 		this.#x, this.#y = x, y;
 		this.#resize();
 	}
 	/** Returns the view size of the Camera */
-	viewSize(): [width: number, height: number] {
+	cameraViewSize(): [width: number, height: number] {
 		return [this.#vw, this.#vh];
 	}
 	/** Returns a rectangle representing the current view of the Camera */
-	view(): [x: number, y: number, w: number, h: number] {
+	cameraView(): [x: number, y: number, w: number, h: number] {
 		return this.#rect;
 	}
 	/** Gets the zoom level of the camera */
-	zoom(): number {
+	cameraZoom(): number {
 		return this.#zoom;
 	}
 	/** Sets the zoom level of the camera */
-	setZoom(zoom: number) {
+	setCameraZoom(zoom: number) {
 		if (zoom <= 0) return console.log("Attempted to set camera zoom to an invalid number:", zoom);
 		this.#zoom = zoom;
 		this.#resize();
 	}
 	/** Returns the image visible within the camera */
-	image(source: Image): Image {
+	cameraImage(source: Image): Image {
 		this.#context.reset();
-		this.#context.drawImage(source, ...this.view(), 0, 0, this.#vw * this.#zoom, this.#vh * this.#zoom);
+		this.#context.drawImage(source, ...this.cameraView(), 0, 0, this.#vw * this.#zoom, this.#vh * this.#zoom);
 		return this.#canvas;
+	}
+	/** Gets the cursors position in the world */
+	cursorWorldPosition(): [number, number] {
+		return this.screenToWorldPos(...cursorPosition());
 	}
 	/**
 	 * Converts the provided world coordinates to screen coordinates
@@ -71,6 +77,13 @@ export class Camera {
 	 */
 	screenToWorldPos(screenX: number, screenY: number): [number, number] {
 		return [this.#rect[0] + screenX / this.#zoom, this.#rect[1] + screenY / this.#zoom];
+	}
+
+	update(delta: number) {
+		if (!!this.#target) {
+			const [x, y] = this.worldToScreenPos(...this.#target.xy());
+			this.setCameraPos(x, y);
+		}
 	}
 
 	#resize() {

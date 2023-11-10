@@ -1,4 +1,5 @@
-import { Bounds, RawBounds } from '../bounds';
+import { RawBounds } from '../bounds';
+import { Bounds } from '../types/bounds';
 /**
  *  ChunkBounds returns a list of bounds split from the original bounds
  * using the maximum provided size

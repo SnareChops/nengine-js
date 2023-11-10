@@ -1,4 +1,4 @@
-import { Bounds } from './bounds';
+import { Bounds } from './types';
 
 /** Checks if a bit in a bitmask is set */
 export function isSet(mask: number, state: number): boolean {

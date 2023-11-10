@@ -14,6 +14,7 @@ export interface ImageChunk {
     height: number;
     image: OffscreenCanvas;
 }
+
 export function chunkImage(img: Image, size: number): ImageChunk[] {
 
     // Obtain the size of the image

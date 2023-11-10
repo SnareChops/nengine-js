@@ -1,4 +1,4 @@
-import { Bounds } from './bounds';
+import { Bounds } from '../types/bounds';
 import { Raw } from './raw';
 
 export class Relative extends Raw {

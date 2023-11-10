@@ -2,7 +2,7 @@ import { RawBounds } from './bounds';
 import { Color } from './color';
 import { Context, Image } from './image';
 import { Line, drawLine } from './line';
-import { Sprite } from './sprite';
+import { Sprite } from './types/sprite';
 import { createCanvas } from './util';
 
 /** Represents a grid of sprites */

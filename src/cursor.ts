@@ -1,6 +1,7 @@
-import { cursorDelta, cursorPosition, isMouseButtonJustPressed, isMouseButtonJustReleased, isMouseButtonPressed, wheel, MouseButton } from './mouse';
+import { Bounds } from './types/bounds';
 
 export class Cursor {
+	#content: Bounds | undefined;
 	#captured: boolean = false;
 
 	/**
@@ -24,8 +25,16 @@ export class Cursor {
 	captured(): boolean {
 		return this.#captured;
 	}
+	/** Gets the content of the cursor */
+	cursorContent(): Bounds | undefined {
+		return this.#content;
+	}
+	/** Sets the cursor content */
+	setCursorContent(content: Bounds | undefined) {
+		this.#content = content;
+	}
 	/** Updates the cursor state. This must be called to used the capture feature. */
-	update() {
+	cursorUpdate() {
 		this.#captured = false;
 	}
 }

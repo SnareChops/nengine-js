@@ -1,15 +1,7 @@
 import { loadImage } from './assets';
-import { Bounds, RawBounds } from './bounds';
+import { RawBounds } from './bounds';
 import { Image } from './image';
 import { panic } from './panic';
-
-/**
- * Implement this interface to form a "sprite" that
- * the renderer can draw automatically
- */
-export interface Sprite extends Bounds {
-    image(): Image;
-}
 
 /**
  * SimpleSprite is a convenience struct for

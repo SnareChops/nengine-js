@@ -1,8 +1,8 @@
+import { debugDraw, debugEnabled, debugPaths, debugStat } from '../debug';
+import { Context } from '../image';
+import { cursorPosition } from '../mouse';
+import { Sprite } from '../types/sprite';
 import { Camera } from './camera';
-import { debugDraw, debugEnabled, debugPaths, debugStat } from './debug';
-import { Context } from './image';
-import { cursorPosition } from './mouse';
-import { Sprite } from './sprite';
 
 /**
  * Renderer is a utility for managing your sprites using the different
@@ -13,14 +13,13 @@ import { Sprite } from './sprite';
  * For simple Scenes that don't use these features, it's recommended to implement
  * a simpler Draw() function in the Scene rather than use the Renderer
  */
-export class Renderer {
+export class Renderer extends Camera {
     #background: Sprite[] = [];
     #screen: Sprite[] = [];
     #world: Sprite[] = [];
-    #camera: Camera;
 
     constructor(viewWidth: number, viewHeight: number, worldWidth: number = viewWidth, worldHeight: number = viewHeight) {
-        this.#camera = new Camera(viewWidth, viewHeight, worldWidth, worldHeight);
+        super(viewWidth, viewHeight, worldWidth, worldHeight);
         debugStat('Screen', () => {
             const [x, y] = cursorPosition();
             return `${x}, ${y}`;
@@ -29,21 +28,6 @@ export class Renderer {
             const [x, y] = this.cursorWorldPosition();
             return `${x.toFixed(2)}, ${y.toFixed(2)}`;
         });
-    }
-
-    /** Gets the world position of the cursor */
-    cursorWorldPosition(): [x: number, y: number] {
-        return this.#camera.screenToWorldPos(...cursorPosition());
-    }
-    /** Adds the sprite to the background layer */
-    addToBackground(sprite: Sprite) {
-        if (this.#background.includes(sprite)) return;
-        this.#screen.push(sprite);
-    }
-    /** Removes the sprite from the background layer */
-    removeFromBackground(sprite: Sprite) {
-        const i = this.#background.indexOf(sprite);
-        if (i > -1) this.#background.splice(i, 1);
     }
     /** Adds the sprite to the world layer */
     addToWorld(sprite: Sprite) {
@@ -65,11 +49,56 @@ export class Renderer {
         const i = this.#screen.indexOf(sprite);
         if (i > -1) this.#screen.splice(i, 1);
     }
-    /** Sets the camera position */
-    setCameraPos(x: number, y: number) {
-        this.#camera.setPos(x, y);
+    /** Gets the world position of the cursor */
+    cursorWorldPosition(): [x: number, y: number] {
+        return this.screenToWorldPos(...cursorPosition());
     }
-    drawSprite(ctx: Context, sprite: Sprite) {
+    /** Adds the sprite to the background layer */
+    addToBackground(sprite: Sprite) {
+        if (this.#background.includes(sprite)) return;
+        this.#screen.push(sprite);
+    }
+    /** Removes the sprite from the background layer */
+    removeFromBackground(sprite: Sprite) {
+        const i = this.#background.indexOf(sprite);
+        if (i > -1) this.#background.splice(i, 1);
+    }
+    /**
+     * Draw the result of the Renderer processing to the provided image
+     * (usually the screen)
+     */
+    draw(ctx: Context) {
+        this.#background.sort((a, b) => a.z() - b.z());
+        for (const item of this.#background) {
+            this.#drawSprite(ctx, item);
+        }
+        // Draw world layer
+        this.#world.sort((a, b) => a.y() - b.y());
+        for (const item of this.#world) {
+            this.#drawSprite(ctx, item);
+        }
+        if (debugEnabled()) {
+            for (const path of debugPaths().values()) {
+                ctx.moveTo(...this.worldToScreenPos(...path.points[0].xy()));
+                for (let i = 1; i < path.points.length; i++) {
+                    ctx.lineTo(...this.worldToScreenPos(...path.points[i].xy()));
+                }
+                ctx.strokeStyle = path.color.hex();
+                ctx.lineWidth = 3;
+                ctx.stroke();
+            }
+        }
+        // Draw screen layer
+        this.#screen.sort((a, b) => a.z() - b.z());
+        for (const item of this.#screen) {
+            this.#drawSprite(ctx, item);
+        }
+
+        // Draw debug layer
+        debugDraw(ctx);
+    }
+
+    #drawSprite(ctx: Context, sprite: Sprite) {
         const image = sprite.image();
         if (!image) return;
         if (sprite.rotation() != 0) {
@@ -80,39 +109,5 @@ export class Renderer {
         } else {
             ctx.drawImage(image, ...sprite.rawPos(), sprite.dx(), sprite.dy());
         }
-    }
-    /**
-     * Draw the result of the Renderer processing to the provided image
-     * (usually the screen)
-     */
-    draw(ctx: Context) {
-        this.#background.sort((a, b) => a.z() - b.z());
-        for (const item of this.#background) {
-            this.drawSprite(ctx, item);
-        }
-        // Draw world layer
-        this.#world.sort((a, b) => a.y() - b.y());
-        for (const item of this.#world) {
-            this.drawSprite(ctx, item);
-        }
-        if (debugEnabled()) {
-            for (const path of debugPaths().values()) {
-                ctx.moveTo(...this.#camera.worldToScreenPos(...path.points[0].xy()));
-                for (let i = 1; i < path.points.length; i++) {
-                    ctx.lineTo(...this.#camera.worldToScreenPos(...path.points[i].xy()));
-                }
-                ctx.strokeStyle = path.color.hex();
-                ctx.lineWidth = 3;
-                ctx.stroke();
-            }
-        }
-        // Draw screen layer
-        this.#screen.sort((a, b) => a.z() - b.z());
-        for (const item of this.#screen) {
-            this.drawSprite(ctx, item);
-        }
-
-        // Draw debug layer
-        debugDraw(ctx);
     }
 }

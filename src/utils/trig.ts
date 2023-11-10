@@ -1,4 +1,4 @@
-import { Position } from '../bounds';
+import { Position } from '../types/position';
 
 /** Gets the distance between two given positions */
 export function distanceBetween(start: Position, end: Position): number {
@@ -20,11 +20,11 @@ export function pointAtAngleWithDistance(x: number, y: number, angle: number, di
 }
 /** Gets the angle (in radians) between two points */
 export function angleBetweenPoints(x1: number, y1: number, x2: number, y2: number): number {
-    const result = Math.atan2(y2 - y1, x2 - x1)
+    const result = Math.atan2(y2 - y1, x2 - x1);
     if (result < 0) {
-        return result + 2 * Math.PI
+        return result + 2 * Math.PI;
     }
-    return result
+    return result;
 }
 /** Returns the point on a line between two points at the given percentage */
 export function lerp(x1: number, y1: number, x2: number, y2: number, percent: number): [number, number] {
@@ -32,7 +32,7 @@ export function lerp(x1: number, y1: number, x2: number, y2: number, percent: nu
 }
 /** Returns the value at a given percentage from a to b */
 export function linearInterpolate(a: number, b: number, percent: number): number {
-    return a + (b - a) * percent
+    return a + (b - a) * percent;
 }
 /** Normalizes a vector */
 export function normalizeVector(x: number, y: number): [x: number, y: number] {

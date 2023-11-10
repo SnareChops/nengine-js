@@ -1,5 +1,6 @@
-import { Point } from './position';
-import { LEFT, RIGHT, CENTER, TOP, BOTTOM, Bounds } from './bounds';
+import { Bounds } from '../types/bounds';
+import { BOTTOM, CENTER, LEFT, RIGHT, TOP } from './bounds';
+import { Point } from './point';
 
 export class Raw extends Point {
     #offsetX: number = 0;

@@ -1,4 +1,4 @@
-import { Bounds } from '../bounds';
+import { Bounds } from '../types';
 import { Particle } from './particle';
 
 /** Represents a particle emitter */
