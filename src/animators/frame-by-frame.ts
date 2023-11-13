@@ -50,12 +50,10 @@ export class FrameByFrameAnimator {
 		this.#loop = loop;
 		this.#elapsed = 0;
 	}
-
 	/** image Returns the current active image for the animation */
 	image(): Image {
 		return this.#frames[this.#frame];
 	}
-
 	/** update Call this on every frame to "run" the animation */
 	update(delta: number) {
 		if (!this.#active) return;

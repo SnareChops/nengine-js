@@ -1,4 +1,4 @@
-import { loadImage } from './assets';
+import { getImage } from './assets';
 import { RawBounds } from './bounds';
 import { Image } from './image';
 import { panic } from './panic';
@@ -13,21 +13,20 @@ import { panic } from './panic';
  */
 export class SimpleSprite extends RawBounds {
     #image: Image | undefined;
-    /** Init sets the initial state of the SimpleStruct */
+
     constructor(image: string | Image) {
         super(0, 0);
         if (typeof image === 'string') {
-            loadImage(image).then(img => {
-                if (!img) console.error(panic('Failed to load image', image));
-                else {
-                    this.#image = img;
-                    this.setSize(img.naturalWidth, img.naturalHeight);
-                }
-            });
-        } else {
-            this.#image = image;
-            this.setSize(image.width, image.height);
+            const result = getImage(image);
+            if (!result) {
+                panic('SimpleSprite tried to use image', image, 'but received undefined');
+                return;
+            }
+            image = result as Image;
         }
+        this.#image = image as Image;
+        this.setSize((image as Image).width, (image as Image).height);
+
     }
     image(): Image | undefined {
         return this.#image;

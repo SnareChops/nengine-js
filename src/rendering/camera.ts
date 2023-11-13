@@ -12,6 +12,8 @@ export class Camera {
 	#vh: number = 0;
 	#ww: number = 0;
 	#wh: number = 0;
+	#zw: number = 0;
+	#zh: number = 0;
 	#rect: [x: number, y: number, w: number, h: number] = [0, 0, 0, 0];
 	#zoom: number = 1;
 	#canvas: Image;
@@ -24,6 +26,8 @@ export class Camera {
 		this.#vh = viewHeight;
 		this.#ww = worldWidth;
 		this.#wh = worldHeight;
+		this.#zw = this.#vw;
+		this.#zh = this.#vh;
 		[this.#canvas, this.#context] = createCanvas(viewWidth, viewHeight);
 		this.setCameraPos(0, 0);
 	}
@@ -52,6 +56,8 @@ export class Camera {
 	setCameraZoom(zoom: number) {
 		if (zoom <= 0) return console.log("Attempted to set camera zoom to an invalid number:", zoom);
 		this.#zoom = zoom;
+		this.#zw = this.#vw / this.#zoom;
+		this.#zh = this.#vh / this.#zoom;
 		this.#resize();
 	}
 	/** Returns the image visible within the camera */
@@ -78,24 +84,17 @@ export class Camera {
 	screenToWorldPos(screenX: number, screenY: number): [number, number] {
 		return [this.#rect[0] + screenX / this.#zoom, this.#rect[1] + screenY / this.#zoom];
 	}
-
+	/** Updates the camera state (Call this every frame) */
 	update(delta: number) {
-		if (!!this.#target) {
-			const [x, y] = this.worldToScreenPos(...this.#target.xy());
-			this.setCameraPos(x, y);
-		}
+		if (!!this.#target)
+			this.setCameraPos(...this.#target.xy());
 	}
 
 	#resize() {
-		// Calculate width and height of SubImage box
-		// factoring in zoom level
-		const zw = this.#vw / this.#zoom;
-		const zh = this.#vh / this.#zoom;
-		// Calculae the points for the rectangle
-		const x1 = clamp(this.#x - zw / 2, 0, this.#ww - zw);
-		const y1 = clamp(this.#y - zh / 2, 0, this.#wh - zh);
-		const x2 = clamp(x1 + zw, zw, this.#ww);
-		const y2 = clamp(y1 + zh, zh, this.#wh);
+		const x1 = clamp(this.#x - this.#zw / 2, 0, this.#ww - this.#zw);
+		const y1 = clamp(this.#y - this.#zh / 2, 0, this.#wh - this.#zh);
+		const x2 = clamp(x1 + this.#zw, this.#zw, this.#ww);
+		const y2 = clamp(y1 + this.#zh, this.#zh, this.#wh);
 		this.#rect = [x1, y1, x2 - x1, y2 - y1];
 	}
 }

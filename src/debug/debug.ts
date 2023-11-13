@@ -24,12 +24,10 @@ export function enableDebug(font: string, color: Color = new Color(255, 255, 255
     _debugFont = font;
     _debugColor = color;
 }
-
 /** Checks if debug mode is enabled */
 export function debugEnabled(): boolean {
     return _debugEnabled;
 }
-
 /**
  * Registers a debug statistic
  * Use this to add your own info to the debug stats
@@ -44,7 +42,6 @@ export function debugStat(label: string, value: () => string) {
     }
     _debugStats.push({ label, value });
 }
-
 /**
  * Registers a debug path
  * Use this to visualize paths
@@ -59,12 +56,10 @@ export function debugPath(ptr: any, points: Position[], color: Color) {
     }
     _debugPaths.set(ptr, { points, color });
 }
-
 /** Returns the current debug paths */
 export function debugPaths(): Map<any, path> {
     return _debugPaths;
 }
-
 /**
  * Draw the debug information to the provided image (usually the screen)
  * If using the MainRenderer, this will be drawn automatically

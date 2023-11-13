@@ -37,17 +37,14 @@ export class SpriteGrid extends RawBounds {
         }
         [this.#image, this.#context] = createCanvas(...this.size());
     }
-
     /** Gets the full list of sprites in the grid */
     contents(): (Sprite | undefined)[] {
         return this.#contents;
     }
-
     /** Gets the sprite at the provided index in the grid (left-to-right top-to-bottom) */
     getContent(index: number): Sprite | undefined {
         return this.#contents[index];
     }
-
     /**
      * Sets the sprite at the provided index in the grid (left-to-right top-to-bottom) 
      * To remove a sprite from the grid, set to undefined
@@ -61,17 +58,14 @@ export class SpriteGrid extends RawBounds {
         }
         this.#render();
     }
-
     /** Get the index that maps to the provided x,y coordinate */
     indexAt(x: number, y: number): number {
         return Math.floor(y / this.#ch) * Math.floor(this.dx() / this.#cw) + Math.floor(x / this.#cw);
     }
-
     /** Get the sprite at the given x,y coordinate */
     getContentAt(x: number, y: number): Sprite | undefined {
         return this.getContent(this.indexAt(x, y));
     }
-
     /**
      * Set the sprite at the given x,y coordinate
      * To remove a sprite from the grid, set to undefined
@@ -83,25 +77,21 @@ export class SpriteGrid extends RawBounds {
         }
         this.#render();
     }
-
     /** Return the gridlines */
     lines(): Line[] {
         return this.#lines;
     }
-
     /** Show the gridlines using the provided stroke width and color */
     showLines(width: number, color: Color) {
         this.#lineColor = color;
         this.#lineWidth = width;
         this.#render();
     }
-
     /** Hide the gridlines */
     hideLines() {
         this.#lineColor = void 0;
         this.#render();
     }
-
     /** Return the grid image including all of it's content sprites */
     image(): Image {
         return this.#image;

@@ -11,7 +11,6 @@ export const SHOULD_PANIC = Symbol('SHOULD_PANIC');
 export function enablePanicMode() {
     Engine[PANIC] |= 1;
 };
-
 /**
  * This is recommended to use for unrecoverable errors, or any 
  * other fault condition. This function is safe to call anytime.
@@ -25,5 +24,5 @@ export function enablePanicMode() {
 export function panic(...args: any): Error {
     console.error('NenginePanic:', ...args);
     Engine[PANIC] |= 2;
-    throw new Error('NenginePanicThrown!')
+    throw new Error('NenginePanicThrown!');
 }

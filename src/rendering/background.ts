@@ -1,6 +1,6 @@
 import { Image } from '../image';
 
-export interface backgroundPiece {
+interface backgroundPiece {
     image: Image;
     x: number;
     y: number;
@@ -21,7 +21,6 @@ export class Background {
     clearBackground() {
         this.#pieces = [];
     }
-
     /** Add an image to the Background at the provided offset using world coordinates */
     addBackgroundImage(image: Image, offsetX: number, offsetY: number) {
         this.#pieces.push({ image, x: offsetX, y: offsetY });

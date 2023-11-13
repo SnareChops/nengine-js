@@ -1,4 +1,4 @@
-import { createCanvas } from '..';
+import { createCanvas } from '../util';
 import { Image } from '../image';
 
 /**
@@ -16,7 +16,6 @@ export interface ImageChunk {
 }
 
 export function chunkImage(img: Image, size: number): ImageChunk[] {
-
     // Obtain the size of the image
     const width = img.width;
     const height = img.height;

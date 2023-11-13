@@ -9,7 +9,6 @@ export class FrameTimer extends DebugTimer {
         const delta = new Date().getTime() - this._start;
         this.#accumulator += delta;
     }
-
     /** Finalizes the measurement for this frame */
     endFrame() {
         this._buffer[this._pointer] = this.#accumulator;

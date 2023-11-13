@@ -19,7 +19,6 @@ export class Projectile extends RawBounds {
         particle.spawn();
         this.#particles.push(particle);
     }
-
     /** Updates the state of the emitter. Call this every frame */
     update(delta: number) {
         let i = 0;
@@ -29,7 +28,7 @@ export class Projectile extends RawBounds {
                 this.#particles[i].despawn();
                 this.#particles.splice(i, 1);
             } else {
-                i += 1
+                i += 1;
             }
         }
     }

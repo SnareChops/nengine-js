@@ -28,7 +28,6 @@ export class Timer {
     setStage(stage: TimerStage, duration: number) {
         this.#timers.set(stage, duration);
     }
-
     /** Get the duration of a timer stage (undefined if an unknown stage) */
     getStage(stage: TimerStage): number | undefined {
         return this.#timers.get(stage);
@@ -37,12 +36,10 @@ export class Timer {
     timings(): Map<TimerStage, number> {
         return this.#timers;
     }
-
     /** Returns the identifier of the current stage */
     stage(): TimerStage {
         return this.#stage;
     }
-
     /** Starts the timer */
     start(looping: boolean = false) {
         if (this.#stage == TimerStageIdle) {
@@ -53,17 +50,30 @@ export class Timer {
             this.#next();
         }
     }
-
     /** Stops the timer */
     stop() {
         this.#stage = TimerStageIdle;
     }
-
     /** Forces the timer to move to the next stage immediately */
     next() {
         if (this.#stage != TimerStageIdle) this.#next();
     }
-
+    /** Update the timer */
+    update(delta: number) {
+        this.#counters;
+        this.#update(delta);
+    }
+    /** Returns a number between 0 and 1 that represents the progress through the current stage */
+    stagePercent(): number {
+        const time = this.#timers.get(this.#stage);
+        const count = this.#counters.get(this.#stage);
+        if (typeof time != 'number' || typeof count != 'number') return 0;
+        return (time - count) / time;
+    }
+    /** Checks if the provided stage elapsed this frame */
+    elapsed(stage: TimerStage): boolean {
+        return (this.#elapsed & this.#stage) === stage;
+    }
     // TODO: Change elapsed to only contain Idle on the first activation of
     // the timer if the timer is looping
 
@@ -81,12 +91,6 @@ export class Timer {
         if (this.#timers.get(this.#stage) == 0) this.#next();
     }
 
-    /** Update the timer */
-    update(delta: number) {
-        this.#counters;
-        this.#update(delta);
-    }
-
     #update(delta: number) {
         if (delta <= 0 || this.#stage == TimerStageIdle) return;
         if (this.#counters.has(this.#stage)) {
@@ -99,18 +103,5 @@ export class Timer {
                 this.#update(rem);
             }
         }
-    }
-
-    /** Returns a number between 0 and 1 that represents the progress through the current stage */
-    stagePercent(): number {
-        const time = this.#timers.get(this.#stage);
-        const count = this.#counters.get(this.#stage);
-        if (typeof time != 'number' || typeof count != 'number') return 0;
-        return (time - count) / time;
-    }
-
-    /** Checks if the provided stage elapsed this frame */
-    elapsed(stage: TimerStage): boolean {
-        return (this.#elapsed & this.#stage) === stage;
     }
 }

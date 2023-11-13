@@ -12,12 +12,10 @@ export class DebugTimer {
 		this._name = name;
 		debugStat(name, () => `avg: ${this.average()}, peak: ${this._peak}`);
 	}
-
 	/** Start measuring time */
 	start() {
 		this._start = new Date().getTime();
 	}
-
 	/** End the current measurement */
 	end() {
 		const delta = new Date().getTime() - this._start;
@@ -25,7 +23,6 @@ export class DebugTimer {
 		this._pointer = (this._pointer + 1) % this._buffer.length;
 		if (delta > this._peak) this._peak = delta;
 	}
-
 	/** Returns the average time in ms */
 	average(): number {
 		let total: number = 0;
@@ -34,7 +31,6 @@ export class DebugTimer {
 		}
 		return (total / this._buffer.length);
 	}
-
 	/** Returns the peak time in ms */
 	peak(): number {
 		return this._peak;

@@ -15,7 +15,6 @@ export class Raw extends Point {
         this.#width = width;
         this.#height = height;
     }
-
     /**
      * Gets the absolute x,y position of the provided anchor point
      * horizontal: {@link LEFT}, {@link RIGHT}, {@link CENTER}

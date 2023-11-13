@@ -1,4 +1,5 @@
 export * from './animators';
+export * from './assets';
 export * from './bounds';
 export * from './debug';
 export * from './emitters';
@@ -7,7 +8,7 @@ export * from './rendering';
 export * from './types';
 export * from './utils';
 
-export * from './assets';
+export * from './button';
 export * from './color';
 export * from './cursor';
 export * from './game';

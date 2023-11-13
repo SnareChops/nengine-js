@@ -27,14 +27,20 @@ export class Engine {
             Engine[MOUSE].wheelY += event.deltaY;
         }, { passive: true });
     }
-
+    /** 
+     * Starts the engine with the provided game.
+     * This activates the engine and starts the game loop.
+     * If the provided game has an init function, that will be called
+     * and will wait for completion until starting the game loop.
+     */
     runGame(game: Game) {
         if (!game) return panic("Invalid game");
         this.game = game;
-        window.requestAnimationFrame(this.tick.bind(this));
+        if (!!this.game.init) this.game.init().then(() => window.requestAnimationFrame(this.#tick.bind(this)));
+        else window.requestAnimationFrame(this.#tick.bind(this));
     }
 
-    tick(timestamp: number) {
+    #tick(timestamp: number) {
         if (!this.game) return panic("Missing game");
         const delta = timestamp - this.prev;
         this.prev = timestamp;
@@ -49,6 +55,6 @@ export class Engine {
         this.context.reset();
         this.game.draw(this.context);
         if (Engine[PANIC] === 3) return;
-        window.requestAnimationFrame(this.tick.bind(this));
+        window.requestAnimationFrame(this.#tick.bind(this));
     }
 }

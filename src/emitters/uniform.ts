@@ -37,7 +37,7 @@ export class Uniform extends RawBounds {
     particles(): Particle[] {
         return this.#active;
     }
-
+    /** Starts the emitter */
     start() {
         for (let i = 0; i < this.#density; i++) {
             for (const particle of this.#particles) {
@@ -60,7 +60,7 @@ export class Uniform extends RawBounds {
             }
         }
     }
-
+    /** Updates the emitter */
     update(delta: number) {
         if (this.#active.length === 0) return;
         let i = 0;
