@@ -7,7 +7,11 @@ export class Color {
     #b: number;
     #a: number;
 
-    /** Creates a color from a hex string */
+    /** 
+     * Creates a color from a hex string 
+     * Note: This is inefficient and is recommended to use number
+     * based colors where possible using the main `Color` constructor
+     */
     static fromHex(hex: string): Color {
         hex = hex.toLowerCase();
         if (hex.startsWith('#')) hex = hex.slice(1);
@@ -26,6 +30,23 @@ export class Color {
         const b = (int >> 8) & 255;
         const a = int & 255;
         return new Color(r, g, b, a);
+    }
+
+    /**
+     * Attempts to lookup a browser supported color by it's name 
+     * If no matching color is found, the end result will be
+     * transparent black (0,0,0,0)
+     * Note: This can be good for quick prototyping and testing
+     * but is very inefficient. Strongly preferred to use explicit
+     * colors where possible.
+     */
+    static named(name: string): Color {
+        const div = document.createElement('div');
+        div.style.color = name;
+        document.body.append(div);
+        const color = Color.fromHex(window.getComputedStyle(div).color);
+        div.remove();
+        return color;
     }
 
     constructor(r: number, g: number, b: number, a: number) {

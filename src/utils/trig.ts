@@ -50,7 +50,7 @@ export function normalVector(x1: number, y1: number, x2: number, y2: number): [x
 export function translateNumberBetweenRanges(value: number, minA: number, maxA: number, minB: number, maxB: number): number {
     return (value - minA) / (maxA - minA) * (maxB - minB) + minB;
 }
-/** Returns the provided number and keeping it in the provided range */
+/** Returns the provided number, keeping it in the provided range */
 export function clamp(num: number, min: number, max: number): number {
     if (num < min) {
         return min;

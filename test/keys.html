@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        const canvas = document.createElement('canvas');
+        canvas.setAttribute('width', 100);
+        canvas.setAttribute('height', 100);
+        const context = canvas.getContext('2d');
+        document.body.append(canvas);
+        context.fillStyle = '#000';
+        context.fillRect(0, 0, 100, 100);
+        canvas.focus();
+        const codes = new Map();
+        window.addEventListener('keydown', event => {
+            if (codes.has(event.code)) return;
+            codes.set(event.code, event.key);
+            console.log(event.code);
+        });
+        function output() {
+            console.log(`export const Codes = new Map<number, string>([\n${codes.entries().map(([key, value]) => `[${key}, ${value}]`).join('\n\t')}]);`);
+        }
+    </script>
+</body>
+
+</html>

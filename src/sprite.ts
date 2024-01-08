@@ -2,6 +2,7 @@ import { getImage } from './assets';
 import { RawBounds } from './bounds';
 import { Image } from './image';
 import { panic } from './panic';
+import { SpriteSource } from './types';
 
 /**
  * SimpleSprite is a convenience struct for
@@ -30,5 +31,25 @@ export class SimpleSprite extends RawBounds {
     }
     image(): Image | undefined {
         return this.#image;
+    }
+}
+
+export class SourceSprite extends RawBounds {
+    #source: SpriteSource;
+    #image: Image | undefined;
+
+    constructor(source: SpriteSource) {
+        super(0, 0);
+        this.#source = source;
+        this.#image = source.image();
+        this.setSize(this.#image?.width || 0, this.#image?.height || 0);
+    }
+
+    image(): Image | undefined {
+        return this.#image;
+    }
+
+    reload(): void {
+        this.#image = this.#source.image();
     }
 }

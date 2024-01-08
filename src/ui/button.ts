@@ -1,6 +1,6 @@
-import { RawBounds } from './bounds';
-import { MouseButton, isMouseButtonPressed } from './mouse';
-import { isSet } from './util';
+import { RawBounds } from '../bounds';
+import { MouseButton, isMouseButtonPressed } from '../mouse';
+import { isSet } from '../util';
 
 export enum ButtonState {
     None = 0,
@@ -16,10 +16,14 @@ export enum ButtonState {
  * Extend this class and add a visual component to create a visible button.
  */
 export class Button extends RawBounds {
-    state: ButtonState = 0;
+    #state: ButtonState = 0;
     /** Gets the current button state */
-    buttonState(): ButtonState {
-        return this.state;
+    state(): ButtonState {
+        return this.#state;
+    }
+    /** Checks if the button is in the provided state */
+    is(state: ButtonState): boolean {
+        return isSet(this.#state, state);
     }
     /** 
      * Update the button state 
@@ -29,17 +33,17 @@ export class Button extends RawBounds {
      * or relative coordinates.
      */
     update(x: number, y: number, delta: number) {
-        const prev = this.state;
-        this.state = 0;
+        const prev = this.#state;
+        this.#state = 0;
         if (this.isWithin(x, y)) {
-            this.state |= ButtonState.Hovered;
+            this.#state |= ButtonState.Hovered;
             if (!isSet(prev, ButtonState.Hovered)) {
-                this.state |= ButtonState.JustHovered;
+                this.#state |= ButtonState.JustHovered;
             }
             if (isMouseButtonPressed(MouseButton.MouseLeft)) {
-                this.state |= ButtonState.Clicked;
+                this.#state |= ButtonState.Clicked;
                 if (!isSet(prev, ButtonState.Clicked)) {
-                    this.state |= ButtonState.JustClicked;
+                    this.#state |= ButtonState.JustClicked;
                 }
             }
         }

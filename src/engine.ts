@@ -1,6 +1,7 @@
 import { Game } from './game';
-import { PANIC, SHOULD_PANIC, panic } from './panic';
+import { KEYS, Key, KeyInfo, keyInit } from './keyboard';
 import { MOUSE, MouseInfo, mouseInit } from './mouse';
+import { PANIC, SHOULD_PANIC, panic } from './panic';
 
 export const CONTEXT = Symbol('CONTEXT');
 
@@ -9,6 +10,7 @@ export class Engine {
     static get [SHOULD_PANIC](): boolean { return (Engine[PANIC] & 1) === 1; }
     static [CONTEXT]: CanvasRenderingContext2D;
     static [MOUSE]: MouseInfo = mouseInit();
+    static [KEYS]: KeyInfo = keyInit();
     prev: number = 0;
     game: Game | undefined;
 
@@ -26,6 +28,13 @@ export class Engine {
             Engine[MOUSE].wheelX += event.deltaX;
             Engine[MOUSE].wheelY += event.deltaY;
         }, { passive: true });
+        context.canvas.addEventListener('keydown', event => {
+            if (event.code && !Engine[KEYS].pressed.includes(event.code as Key)) Engine[KEYS].pressed.push(event.code as Key);
+            Engine[KEYS].chars.push(event.key);
+        });
+        context.canvas.addEventListener('keyup', event => {
+            if (event.code && Engine[KEYS].pressed.includes(event.code as Key)) Engine[KEYS].pressed.splice(Engine[KEYS].pressed.indexOf(event.code as Key), 1);
+        });
     }
     /** 
      * Starts the engine with the provided game.
@@ -51,6 +60,8 @@ export class Engine {
             Engine[MOUSE].prevX = Engine[MOUSE].x;
             Engine[MOUSE].prevY = Engine[MOUSE].y;
             Engine[MOUSE].prevButtons = Engine[MOUSE].buttons;
+            Engine[KEYS].prev = Engine[KEYS].pressed;
+            Engine[KEYS].chars = [];
         }
         this.context.reset();
         this.game.draw(this.context);

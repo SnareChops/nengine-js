@@ -2,6 +2,11 @@ import type { Image } from '../image';
 import { panic } from '../panic';
 
 const imageCache = new Map<string, Image>();
+
+export function reloadCache(): void {
+    imageCache.clear();
+}
+
 /**
  * Adds an image from a url to the image cache with the provided url
  * 
@@ -16,14 +21,14 @@ const imageCache = new Map<string, Image>();
  * will be reported, and later when attempting to retrieve the image, undefined
  * will be returned instead
  */
-export async function addImage(alias: string, url: string): Promise<void> {
+export async function addImage(url: string): Promise<void> {
     const image = await loadImage(url);
-    if (!!image) imageCache.set(alias, image);
+    if (!!image) imageCache.set(url, image);
 }
 /** Gets an image from the cache */
-export function getImage(alias: string): Image | undefined {
-    if (imageCache.has(alias))
-        return imageCache.get(alias);
+export function getImage(url: string): Image | undefined {
+    if (imageCache.has(url))
+        return imageCache.get(url);
 }
 /**
  * Loads an image from a url.
@@ -44,4 +49,20 @@ export async function loadImage(url: string): Promise<HTMLImageElement | undefin
         };
         image.addEventListener('load', event => resolve(event.target as HTMLImageElement));
     });
+}
+
+export class ImageSource {
+    #url: string;
+
+    constructor(url: string) {
+        this.#url = url;
+    }
+
+    url(): string {
+        return this.#url;
+    }
+
+    image(): Image | undefined {
+        return getImage(this.#url);
+    }
 }

@@ -26,6 +26,8 @@ export interface Bounds extends Position {
     size(): [width: number, height: number];
     /** Sets the width,height of the bounds */
     setSize(w: number, h: number): void;
+    /** Resizes the bounds */
+    resize(w: number, h: number): void;
     /**
      * Gets the width of the bounds 
      * @alias dx
@@ -36,9 +38,15 @@ export interface Bounds extends Position {
      * @alias dy 
      */
     height(): number;
-    /** Gets the width of the bounds */
+    /** 
+     * Gets the width of the bounds 
+     * @alias width
+     */
     dx(): number;
-    /** Gets the height of the bounds */
+    /**
+     * Gets the height of the bounds 
+     * @alias height
+     */
     dy(): number;
     /** Gets the rotation of the bounds (in radians) */
     rotation(): number;

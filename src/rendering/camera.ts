@@ -1,5 +1,5 @@
-import { cursorPosition } from '..';
 import { Context, Image } from '../image';
+import { cursorPosition } from '../mouse';
 import { Entity } from '../types/entity';
 import { createCanvas } from '../util';
 import { clamp } from '../utils';
@@ -29,31 +29,39 @@ export class Camera {
 		this.#zw = this.#vw;
 		this.#zh = this.#vh;
 		[this.#canvas, this.#context] = createCanvas(viewWidth, viewHeight);
-		this.setCameraPos(0, 0);
+		this.setPos(0, 0);
+	}
+	/** Follow the entity with the camera */
+	follow(target: Entity) {
+		this.#target = target;
 	}
 	/** Gets the position of the camera */
-	cameraPos(): [number, number] {
+	pos(): [number, number] {
 		return [this.#x, this.#y];
 	}
 	/** Sets the position of the Camera */
-	setCameraPos(x: number, y: number) {
+	setPos(x: number, y: number) {
 		this.#x, this.#y = x, y;
 		this.#resize();
 	}
 	/** Returns the view size of the Camera */
-	cameraViewSize(): [width: number, height: number] {
+	viewSize(): [width: number, height: number] {
 		return [this.#vw, this.#vh];
 	}
+	/** Returns the world size of the Camera */
+	worldSize(): [width: number, height: number] {
+		return [this.#ww, this.#wh];
+	}
 	/** Returns a rectangle representing the current view of the Camera */
-	cameraView(): [x: number, y: number, w: number, h: number] {
+	view(): [x: number, y: number, w: number, h: number] {
 		return this.#rect;
 	}
 	/** Gets the zoom level of the camera */
-	cameraZoom(): number {
+	zoom(): number {
 		return this.#zoom;
 	}
 	/** Sets the zoom level of the camera */
-	setCameraZoom(zoom: number) {
+	setZoom(zoom: number) {
 		if (zoom <= 0) return console.log("Attempted to set camera zoom to an invalid number:", zoom);
 		this.#zoom = zoom;
 		this.#zw = this.#vw / this.#zoom;
@@ -61,9 +69,9 @@ export class Camera {
 		this.#resize();
 	}
 	/** Returns the image visible within the camera */
-	cameraImage(source: Image): Image {
+	image(source: Image): Image {
 		this.#context.reset();
-		this.#context.drawImage(source, ...this.cameraView(), 0, 0, this.#vw * this.#zoom, this.#vh * this.#zoom);
+		this.#context.drawImage(source, ...this.view(), 0, 0, this.#vw * this.#zoom, this.#vh * this.#zoom);
 		return this.#canvas;
 	}
 	/** Gets the cursors position in the world */
@@ -87,7 +95,7 @@ export class Camera {
 	/** Updates the camera state (Call this every frame) */
 	update(delta: number) {
 		if (!!this.#target)
-			this.setCameraPos(...this.#target.xy());
+			this.setPos(...this.#target.xy());
 	}
 
 	#resize() {
