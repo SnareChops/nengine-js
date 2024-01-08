@@ -15,6 +15,39 @@ export class Raw extends Point {
         this.#width = width;
         this.#height = height;
     }
+    /** Gets the absolute x,y position of the top left corner of the bounds */
+    rawPos(): [x: number, y: number] {
+        return [this.X - this.#offsetX, this.Y - this.#offsetY];
+    }
+    /**
+     * Sets the horizontal and vertical anchor setting for the bounds 
+     * horizontal: {@link LEFT}, {@link RIGHT}, or {@link CENTER}
+     * vertical: {@link TOP}, {@link BOTTOM}, or {@link CENTER}
+     */
+    setAnchor(h: number, v: number) {
+        switch (h) {
+            case LEFT:
+                this.#offsetX = 0;
+                break;
+            case CENTER:
+                this.#offsetX = this.#width / 2;
+                break;
+            case RIGHT:
+                this.#offsetX = this.#width;
+                break;
+        }
+        switch (v) {
+            case TOP:
+                this.#offsetY = 0;
+                break;
+            case CENTER:
+                this.#offsetY = this.#height / 2;
+                break;
+            case BOTTOM:
+                this.#offsetY = this.#height;
+                break;
+        }
+    }
     /**
      * Gets the absolute x,y position of the provided anchor point
      * horizontal: {@link LEFT}, {@link RIGHT}, {@link CENTER}
@@ -47,39 +80,6 @@ export class Raw extends Point {
         }
         return [x, y];
     }
-    /** Gets the absolute x,y position of the top left corner of the bounds */
-    rawPos(): [x: number, y: number] {
-        return [this.X - this.#offsetX, this.Y - this.#offsetY];
-    }
-    /**
-     * Sets the horizontal and vertical anchor setting for the bounds 
-     * horizontal: {@link LEFT}, {@link RIGHT}, or {@link CENTER}
-     * vertical: {@link TOP}, {@link BOTTOM}, or {@link CENTER}
-     */
-    setAnchor(x: number, y: number) {
-        switch (x) {
-            case LEFT:
-                this.#offsetX = 0;
-                break;
-            case CENTER:
-                this.#offsetX = this.#width / 2;
-                break;
-            case RIGHT:
-                this.#offsetX = this.#width;
-                break;
-        }
-        switch (y) {
-            case TOP:
-                this.#offsetY = 0;
-                break;
-            case CENTER:
-                this.#offsetY = this.#height / 2;
-                break;
-            case BOTTOM:
-                this.#offsetY = this.#height;
-                break;
-        }
-    }
     /** Gets the relative x,y offset of the bounds */
     offset(): [x: number, y: number] {
         return [this.#offsetX * this.#scale, this.#offsetY * this.#scale];
@@ -91,12 +91,18 @@ export class Raw extends Point {
     }
     /** Gets the width,height of the bounds */
     size(): [width: number, height: number] {
-        return [this.width(), this.height()];
+        return [this.#width * this.#scale, this.#height * this.#scale];
     }
     /** Sets the width,height of the bounds */
     setSize(w: number, h: number) {
         this.#width = w / this.#scale;
         this.#height = h / this.#scale;
+    }
+    resize(w: number, h: number) {
+        this.#offsetX = this.#offsetX * (w / this.#width);
+        this.#offsetY = this.#offsetY * (h / this.#height);
+        this.#width = w;
+        this.#height = h;
     }
     /**
      * Gets the width of the bounds 
@@ -152,20 +158,27 @@ export class Raw extends Point {
     }
     /** Gets the absolute x,y position at the midpoint of the bounds */
     mid(): [x: number, y: number] {
-        return [Math.floor(this.X + this.#width / 2), Math.floor(this.Y + this.#height / 2)];
+        return [Math.floor(this.X + (this.#width * this.#scale) / 2), Math.floor(this.Y + (this.#height * this.#scale) / 2)];
     }
     /** Gets the maximum absolute x,y position of the bounds */
     max(): [x: number, y: number] {
-        return [this.X + this.#width, this.Y + this.#height];
+        return [Math.floor(this.X + this.#width * this.#scale), Math.floor(this.Y + this.#height * this.#scale)];
+    }
+    /** Gets the maximum absolute x position of the bounds */
+    maxX(): number {
+        return Math.floor(this.X - this.#offsetX + this.#width * this.#scale);
+    }
+    /** Gets the maximum absolute y position of the bounds */
+    maxY(): number {
+        return Math.floor(this.Y - this.#offsetY + this.#height * this.#scale);
     }
     /** Checks if the provided x,y position is within the bounds */
     isWithin(x: number, y: number): boolean {
-        const [x1, y1] = this.rawPos();
+        const [x1, y1] = this.min();
         if (this.width() == 1 && this.height() == 1) {
             return x == x1 && y == y1;
         }
-        const x2 = x1 + this.width();
-        const y2 = y1 + this.height();
+        const [x2, y2] = this.max();
         return x > x1 && x < x2 && y > y1 && y < y2;
     }
     /**
@@ -188,11 +201,11 @@ export class Raw extends Point {
     }
     /** Checks if the provided bounds overlaps (touches) this bounds */
     doesCollide(other: Bounds): boolean {
-        const [w1, h1] = this.size();
-        const [x1, y1] = this.rawPos();
-        const [w2, h2] = other.size();
-        const [x2, y2] = other.rawPos();
-        return !(x2 + w2 < x1 || x2 > x1 + w1 || y2 + h2 < y1 || y2 > y1 + h1);
+        const [x1m, y1m] = this.min();
+        const [x1M, y1M] = this.max();
+        const [x2m, y2m] = other.min();
+        const [x2M, y2M] = other.max();
+        return !(x2M < x1m || x2m > x1M || y2M < y1m || y2m > y1M);
     }
     /** Get the edges involved in a collision */
     collisionEdges(other: Bounds): [number, number] {
