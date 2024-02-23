@@ -12,8 +12,6 @@ interface stat {
     value: () => string;
 }
 
-
-
 /** Enables debug stat tracking and display */
 export function enableDebug(font: string, color: Color = new Color(255, 255, 255, 255)) {
     _debugEnabled = true;

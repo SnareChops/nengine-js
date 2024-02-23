@@ -1,6 +1,6 @@
-import { Camera } from './camera';
 import { Raw } from '../bounds/raw';
 import { Sprite } from '../types/sprite';
+import { Camera } from '../types/camera';
 import { Context, debugStat } from '..';
 
 /** A RenderLayer for drawing sprites using world coordinates */

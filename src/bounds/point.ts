@@ -1,7 +1,24 @@
+import { Vector } from '../types/vector';
+
 export class Point {
     protected X: number = 0;
     protected Y: number = 0;
     protected Z: number = 0;
+
+    /** returns the x and y components as a vector */
+    pos(): Vector {
+        return new Vector(this.X, this.X);
+    }
+
+    /** 
+     * Sets the x and y components from a 2d vector
+     * Note: Only use this if you already have a vector from other
+     * calculations. Otherwise use setPos2(), setPos3(), or xy()
+     */
+    setPos(pos: Vector) {
+        this.X = pos.X;
+        this.Y = pos.Y;
+    }
 
     /** pos2 returns the x and y components of the point */
     pos2(): [x: number, y: number] {
@@ -52,5 +69,15 @@ export class Point {
     /** Gets and/or sets the x,y,z positions of the point */
     xyz(x?: number, y?: number, z?: number): [x: number, y: number, z: number] {
         return [this.x(x), this.y(y), this.z(z)];
+    }
+
+    /** 
+     * Aligns the position to the grid
+     * h is the horizontal cell size of the grid
+     * v is the vertical cell size of the grid
+     */
+    gridAlign(h: number, v: number) {
+        this.X = Math.floor(this.X / h) * h;
+        this.Y = Math.floor(this.Y / v) * v;
     }
 }

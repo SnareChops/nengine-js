@@ -1,3 +1,4 @@
+import { Image } from './image';
 import { Bounds } from './types';
 
 export function int(n: number): number {
@@ -51,4 +52,10 @@ interface HorizontalRelative {
 export function positionRight(object: HorizontalRelative, padding: number): [x: number, y: number] {
     const [x, y] = object.pos2();
     return [x + object.dx() + padding, y];
+}
+
+export function fitToNewImage(w: number, h: number, image: Image): Image {
+    const [canvas, ctx] = createCanvas(w, h);
+    ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, w, h);
+    return canvas;
 }

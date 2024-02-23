@@ -8,6 +8,7 @@ export enum ButtonState {
     Clicked = 1 << 2,
     JustHovered = 1 << 3,
     JustClicked = 1 << 4,
+    Disabled = 1 << 5,
 }
 
 /**
@@ -24,6 +25,14 @@ export class Button extends RawBounds {
     /** Checks if the button is in the provided state */
     is(state: ButtonState): boolean {
         return isSet(this.#state, state);
+    }
+    /** Disables the button */
+    disable() {
+        this.#state |= ButtonState.Disabled;
+    }
+    /** Enables the button */
+    enable() {
+        this.#state &= ~ButtonState.Disabled;
     }
     /** 
      * Update the button state 

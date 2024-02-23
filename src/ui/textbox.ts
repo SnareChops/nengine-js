@@ -22,6 +22,11 @@ export class TextBox extends RawBounds {
     setContent(content: string): void {
         this.#content = content;
     }
+    /** Focus the textbox */
+    focus(): void {
+        this.#focused = true;
+    }
+
     /** Updates the box, requires cursor position */
     update(x: number, y: number, delta: number) {
         if (this.#input.isCaptured()) {

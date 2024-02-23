@@ -8,7 +8,18 @@ export class Raw extends Point {
     #width: number = 0;
     #height: number = 0;
     #rotation: number = 0;
-    #scale: number = 1;
+    #scaleX: number = 1;
+    #scaleY: number = 1;
+
+    static fromPoints(a: Point, b: Point): Raw {
+        const x1 = Math.min(a.x(), b.x());
+        const y1 = Math.min(a.y(), b.y());
+        const x2 = Math.max(a.x(), b.x());
+        const y2 = Math.max(a.y(), b.y());
+        const raw = new Raw(x2 - x1, y2 - y1);
+        raw.setPos2(x1, y1);
+        return raw;
+    }
 
     constructor(width: number = 0, height: number = 0) {
         super();
@@ -17,7 +28,7 @@ export class Raw extends Point {
     }
     /** Gets the absolute x,y position of the top left corner of the bounds */
     rawPos(): [x: number, y: number] {
-        return [this.X - this.#offsetX, this.Y - this.#offsetY];
+        return [this.X - this.#offsetX * this.#scaleX, this.Y - this.#offsetY * this.#scaleY];
     }
     /**
      * Sets the horizontal and vertical anchor setting for the bounds 
@@ -58,31 +69,31 @@ export class Raw extends Point {
         let y = 0;
         switch (h) {
             case LEFT:
-                x = this.X - (this.#offsetX * this.#scale);
+                x = this.X - (this.#offsetX * this.#scaleX);
                 break;
             case CENTER:
-                x = this.X - (this.#offsetX * this.#scale) + (this.#width / 2);
+                x = this.X - (this.#offsetX * this.#scaleX) + (this.#width / 2);
                 break;
             case RIGHT:
-                x = this.X - this.#offsetX * this.#scale + this.#width;
+                x = this.X - this.#offsetX * this.#scaleX + this.#width;
                 break;
         }
         switch (v) {
             case TOP:
-                y = this.Y - this.#offsetY * this.#scale;
+                y = this.Y - this.#offsetY * this.#scaleY;
                 break;
             case CENTER:
-                y = this.Y - (this.#offsetY * this.#scale) + (this.#height / 2);
+                y = this.Y - (this.#offsetY * this.#scaleY) + (this.#height / 2);
                 break;
             case BOTTOM:
-                y = this.Y - this.#offsetY * this.#scale + this.#height;
+                y = this.Y - this.#offsetY * this.#scaleY + this.#height;
                 break;
         }
         return [x, y];
     }
     /** Gets the relative x,y offset of the bounds */
     offset(): [x: number, y: number] {
-        return [this.#offsetX * this.#scale, this.#offsetY * this.#scale];
+        return [this.#offsetX * this.#scaleX, this.#offsetY * this.#scaleY];
     }
     /** Sets the relative x,y offset of the bounds */
     setOffset(x: number, y: number) {
@@ -91,12 +102,12 @@ export class Raw extends Point {
     }
     /** Gets the width,height of the bounds */
     size(): [width: number, height: number] {
-        return [this.#width * this.#scale, this.#height * this.#scale];
+        return [this.#width * this.#scaleX, this.#height * this.#scaleY];
     }
     /** Sets the width,height of the bounds */
     setSize(w: number, h: number) {
-        this.#width = w / this.#scale;
-        this.#height = h / this.#scale;
+        this.#width = w;
+        this.#height = h;
     }
     resize(w: number, h: number) {
         this.#offsetX = this.#offsetX * (w / this.#width);
@@ -109,22 +120,22 @@ export class Raw extends Point {
      * @alias dx
      */
     width(): number {
-        return this.#width * this.#scale;
+        return this.#width * this.#scaleX;
     }
     /**
      * Gets the height of the bounds
      * @alias dy 
      */
     height(): number {
-        return this.#height * this.#scale;
+        return this.#height * this.#scaleY;
     }
     /** Gets the width of the bounds */
     dx(): number {
-        return this.#width * this.#scale;
+        return this.#width * this.#scaleX;
     }
     /** Gets the height of the bounds */
     dy(): number {
-        return this.#height * this.#scale;
+        return this.#height * this.#scaleY;
     };
     /** Gets the rotation of the bounds (in radians) */
     rotation(): number {
@@ -135,21 +146,26 @@ export class Raw extends Point {
         this.#rotation = radians;
     }
     /** Gets the scale of the bounds, as float percentage */
-    scale(): number {
-        return this.#scale;
+    scale(): [number, number] {
+        return [this.#scaleX, this.#scaleY];
     }
     /** Sets the scale of the bounds, as float percentage */
-    setScale(scale: number) {
-        this.#scale = scale;
+    setScale(x: number, y: number) {
+        this.#scaleX = x;
+        this.#scaleY = y;
     }
     /**
      * Scales the bounds to fit within the provided width,height
      * returns the actual width,height after scaling
+     * Note: This function respects aspect ratio, choosing the smallest
+     * of the horizontal and vertical scale factors to maintain the aspect ratio\
+     * while keeping the scaled bounds within the specified width and height
      */
     scaleTo(width: number, height: number): [width: number, height: number] {
         const widthFactor = width / this.#width;
         const heightFactor = height / this.#height;
-        this.#scale = Math.min(widthFactor, heightFactor);
+        this.#scaleX = Math.min(widthFactor, heightFactor);
+        this.#scaleY = Math.min(widthFactor, heightFactor);
         return this.size();
     }
     /** Gets the minmum absolute x,y position of the bounds */
@@ -158,19 +174,19 @@ export class Raw extends Point {
     }
     /** Gets the absolute x,y position at the midpoint of the bounds */
     mid(): [x: number, y: number] {
-        return [Math.floor(this.X + (this.#width * this.#scale) / 2), Math.floor(this.Y + (this.#height * this.#scale) / 2)];
+        return [Math.floor(this.X + (this.#width * this.#scaleX) / 2), Math.floor(this.Y + (this.#height * this.#scaleY) / 2)];
     }
     /** Gets the maximum absolute x,y position of the bounds */
     max(): [x: number, y: number] {
-        return [Math.floor(this.X + this.#width * this.#scale), Math.floor(this.Y + this.#height * this.#scale)];
+        return [Math.floor(this.X + this.#width * this.#scaleX), Math.floor(this.Y + this.#height * this.#scaleY)];
     }
     /** Gets the maximum absolute x position of the bounds */
     maxX(): number {
-        return Math.floor(this.X - this.#offsetX + this.#width * this.#scale);
+        return Math.floor(this.X - this.#offsetX + this.#width * this.#scaleX);
     }
     /** Gets the maximum absolute y position of the bounds */
     maxY(): number {
-        return Math.floor(this.Y - this.#offsetY + this.#height * this.#scale);
+        return Math.floor(this.Y - this.#offsetY + this.#height * this.#scaleY);
     }
     /** Checks if the provided x,y position is within the bounds */
     isWithin(x: number, y: number): boolean {

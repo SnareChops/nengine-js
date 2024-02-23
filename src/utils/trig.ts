@@ -18,6 +18,12 @@ export function pointAtAngleWithDistance(x: number, y: number, angle: number, di
         y + dist * Math.sin(angle),
     ];
 }
+
+/** Gets the angle from point a to point b */
+export function angleBetween(a: Position, b: Position): number {
+    return angleBetweenPoints(...a.xy(), ...b.xy());
+}
+
 /** Gets the angle (in radians) between two points */
 export function angleBetweenPoints(x1: number, y1: number, x2: number, y2: number): number {
     const result = Math.atan2(y2 - y1, x2 - x1);

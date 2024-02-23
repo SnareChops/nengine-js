@@ -3,13 +3,6 @@ import { Context } from './image';
 import { Key, isKeyJustPressed } from './keyboard';
 import { Scene, Loadable, Initable, Destroyable, Reloadable } from './types';
 
-/** Represents a game that can be run by the engine */
-export interface Game {
-    init?(): Promise<void>;
-    update(delta: number): void;
-    draw(context: Context): void;
-}
-
 /** 
  * A built-in scene switching Game object
  * Use this to load and switch between scenes or

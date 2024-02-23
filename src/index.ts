@@ -17,6 +17,7 @@ export * from './input';
 export * from './line';
 export * from './physics';
 export * from './random';
+export * from './rect';
 export * from './sourceGrid';
 export * from './sprite';
 export * from './timer';

@@ -53,9 +53,9 @@ export interface Bounds extends Position {
     /** Sets the rotation of the bounds (in radians) */
     setRotation(radians: number): void;
     /** Gets the scale of the bounds, as float percentage */
-    scale(): number;
+    scale(): [number, number];
     /** Sets the scale of the bounds, as float percentage */
-    setScale(scale: number): void;
+    setScale(scaleX: number, scaleY: number): void;
     /**
      * Scales the bounds to fit within the provided width,height
      * returns the actual width,height after scaling

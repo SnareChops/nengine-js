@@ -1,7 +1,4 @@
-import { debugDraw, debugEnabled, debugPaths, debugStat } from '../debug';
 import { Context } from '../image';
-import { cursorPosition } from '../mouse';
-import { Sprite } from '../types/sprite';
 import { RenderLayer } from '../types/renderLayer';
 
 /**
