@@ -1,4 +1,4 @@
-import { Game } from './game';
+import { Game } from './types/game';
 import { KEYS, Key, KeyInfo, keyInit } from './keyboard';
 import { MOUSE, MouseInfo, mouseInit } from './mouse';
 import { PANIC, SHOULD_PANIC, panic } from './panic';
@@ -45,7 +45,7 @@ export class Engine {
     runGame(game: Game) {
         if (!game) return panic("Invalid game");
         this.game = game;
-        if (!!this.game.init) this.game.init().then(() => window.requestAnimationFrame(this.#tick.bind(this)));
+        if (!!this.game.load) this.game.load().then(() => window.requestAnimationFrame(this.#tick.bind(this)));
         else window.requestAnimationFrame(this.#tick.bind(this));
     }
 
