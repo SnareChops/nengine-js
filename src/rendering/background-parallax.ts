@@ -1,9 +1,9 @@
-import { Camera } from './camera';
 import { Raw } from '../bounds/raw';
 import { Image, Context } from '../image';
+import { BasicCamera } from './camera-basic';
 
 export class ParallaxBackground extends Raw {
-    #camera: Camera;
+    #camera: BasicCamera;
     #order: number;
     #worldWidth: number;
     #worldHeight: number;
@@ -15,7 +15,7 @@ export class ParallaxBackground extends Raw {
         this.#worldWidth = worldWidth;
         this.#worldHeight = worldHeight;
         this.#image = image;
-        this.#camera = new Camera(viewWidth, viewHeight, image.width, image.height);
+        this.#camera = new BasicCamera(viewWidth, viewHeight, image.width, image.height);
     }
     /** ParallaxBackground rendering order */
     order(): number {

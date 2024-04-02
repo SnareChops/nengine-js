@@ -1,4 +1,4 @@
-import { Camera } from './camera';
+import { Camera } from '../types/camera';
 import { Raw } from '../bounds/raw';
 import { Context, Image } from '../image';
 

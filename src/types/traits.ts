@@ -1,4 +1,4 @@
-import { Game } from '../game';
+import { Game } from './game';
 import { Context } from '../image';
 import { Scene } from './scene';
 
