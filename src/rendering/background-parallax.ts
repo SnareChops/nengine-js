@@ -1,6 +1,5 @@
 import { Raw } from '../bounds/raw';
 import { Context, Image } from '../image';
-import { Camera } from '../types/camera';
 import { BasicCamera } from './camera-basic';
 
 /** 
@@ -8,7 +7,7 @@ import { BasicCamera } from './camera-basic';
  * Note: This is also a RenderLayer that can be used with the Renderer
  */
 export class ParallaxBackground extends Raw {
-    #camera: Camera;
+    #camera: BasicCamera;
     #order: number;
     #worldWidth: number;
     #worldHeight: number;

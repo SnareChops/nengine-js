@@ -41,7 +41,7 @@ export class BasicGame {
     }
 
     loadScene(scene: Scene) {
-        if (typeof (this.#scene as unknown as Destroyable).destroy === 'function') {
+        if (this.#scene && typeof (this.#scene as unknown as Destroyable).destroy === 'function') {
             (this.#scene as unknown as Destroyable).destroy();
         }
         if (typeof (scene as unknown as Loadable).load === 'function') {
