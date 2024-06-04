@@ -8,10 +8,10 @@ export class CameraBounds {
     #oy: number = 0;
 
     constructor(width: number, height: number) {
-        this.#w = width;
-        this.#h = height;
-        this.#ox = width / 2;
-        this.#oy = height / 2;
+        this.#w = Math.floor(width);
+        this.#h = Math.floor(height);
+        this.#ox = this.#w / 2;
+        this.#oy = this.#h / 2;
     }
 
     pos(): [number, number] {
@@ -28,6 +28,8 @@ export class CameraBounds {
     }
 
     resize(w: number, h: number) {
+        w = Math.floor(w);
+        h = Math.floor(h);
         this.#ox = this.#ox * (w / this.#w);
         this.#oy = this.#oy * (h / this.#h);
         this.#w = w;

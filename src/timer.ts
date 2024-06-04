@@ -1,3 +1,17 @@
+import { isSet } from './bit';
+
+export interface StagedTimer {
+    addStage(duration: number): TimerStage;
+    setStage(stage: TimerStage, duration: number): void;
+    timings(): Map<TimerStage, number>;
+    stage(): TimerStage;
+    start(looping: boolean): void;
+    stop(): void;
+    next(): void;
+    update(delta: number): void;
+    elapsed(stage: TimerStage): boolean;
+    stagePercent(): number;
+}
 /** Handle to a timer stage */
 export type TimerStage = number;
 /** The default IDLE stage */
@@ -60,7 +74,7 @@ export class Timer {
     }
     /** Update the timer */
     update(delta: number) {
-        this.#counters;
+        this.#elapsed = 0;
         this.#update(delta);
     }
     /** Returns a number between 0 and 1 that represents the progress through the current stage */
@@ -72,7 +86,7 @@ export class Timer {
     }
     /** Checks if the provided stage elapsed this frame */
     elapsed(stage: TimerStage): boolean {
-        return (this.#elapsed & this.#stage) === stage;
+        return isSet(this.#elapsed, stage);
     }
     // TODO: Change elapsed to only contain Idle on the first activation of
     // the timer if the timer is looping
@@ -81,7 +95,7 @@ export class Timer {
     #next() {
         this.#elapsed |= this.#stage;
         // If there is no next step, unless looping == true
-        if (this.#timers.has(this.#stage << 1)) {
+        if (!this.#timers.has(this.#stage << 1)) {
             this.#stage = TimerStageIdle;
             if (this.#looping) this.start(this.#looping);
             return;

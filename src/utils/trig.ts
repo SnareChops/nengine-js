@@ -66,3 +66,11 @@ export function clamp(num: number, min: number, max: number): number {
     }
     return num;
 }
+
+export function moveTowards(start: Position, end: Position, speed: number, delta: number): [x: number, y: number] {
+    const length = speed / delta;
+    const dist = distanceBetween(start, end);
+    if (dist <= length) return end.xy();
+    const angle = angleBetween(start, end);
+    return pointAtAngleWithDistance(...start.xy(), angle, length);
+} 

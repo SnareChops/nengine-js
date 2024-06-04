@@ -33,7 +33,7 @@ export class SpriteSourceGrid extends SpriteGrid {
         }
     }
     /** Sets all content for the grid */
-    // @ts-expect-error
+    // @ts-expect-error Allow overwriting of property with different signature
     setAllContent(sources: SpriteSource[]): void {
         this.#sources = sources;
         const sprites: (Sprite | undefined)[] = [];
@@ -47,7 +47,7 @@ export class SpriteSourceGrid extends SpriteGrid {
         super.setAllContent(sprites);
     }
     /** Sets content at position */
-    // @ts-expect-error
+    // @ts-expect-error Allow overwriting of property with different signature
     setContentAt(x: number, y: number, source: SpriteSource): void {
         this.setContent(this.indexAt(x, y), source);
     }

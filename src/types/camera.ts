@@ -14,3 +14,7 @@ export interface Camera {
     follow(target: Bounds): void;
     update(): void;
 }
+
+// export interface BufferedCamera extends Camera {
+//     image(image: Image): Image;
+// }

@@ -1,7 +1,5 @@
-import { Engine } from './engine';
-import { isSet } from './util';
-
-export const MOUSE = Symbol('MOUSE');
+import { Engine, MOUSE } from './engine';
+import { isSet } from './bit';
 
 export enum MouseButton {
     MouseLeft = 1 << 0,

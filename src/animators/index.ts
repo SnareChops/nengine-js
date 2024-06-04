@@ -1,8 +1,8 @@
-import { Context } from '../image';
+import { Image } from '../image';
 
 /** Represents an animator */
 export interface Animator {
     start(name: string): void;
     update(delta: number): void;
-    image(): Context;
+    image(): Image;
 }

@@ -1,6 +1,6 @@
+import { isSet } from './bit';
 import { PhysicsBounds } from './bounds';
 import { Bounds } from './types';
-import { isSet } from './util';
 
 interface PhysicsEntity extends PhysicsBounds {
     type(): number;

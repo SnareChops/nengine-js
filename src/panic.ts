@@ -1,6 +1,5 @@
-import { Engine } from './engine';
-export const PANIC = Symbol('PANIC');
-export const SHOULD_PANIC = Symbol('SHOULD_PANIC');
+import { Engine, PANIC } from './engine';
+
 
 /** 
  * Enables "Panic Mode" for the game engine. This will **immediately**

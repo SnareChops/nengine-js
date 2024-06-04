@@ -67,6 +67,14 @@ export interface Bounds extends Position {
     mid(): [x: number, y: number];
     /** Gets the maximum absolute x,y position of the bounds */
     max(): [x: number, y: number];
+    /** Gets the minimum absolute x position of the bounds */
+    minX(): number;
+    /** Gets the minimum absolute y position of the bounds */
+    minY(): number;
+    /** Gets the maximum absolute x position of the bounds */
+    maxX(): number;
+    /** Gets the maximum absolute y position of the bounds */
+    maxY(): number;
     /** Checks if the provided x,y position is within the bounds */
     isWithin(x: number, y: number): boolean;
     /**

@@ -1,5 +1,5 @@
-import { Game } from '../game';
 import { Context } from '../image';
+import { Game } from './game';
 import { Scene } from './scene';
 
 export interface Initable {

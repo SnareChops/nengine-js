@@ -1,5 +1,6 @@
 export * from './animators';
 export * from './assets';
+export * from './bit';
 export * from './bounds';
 export * from './debug';
 export * from './emitters';

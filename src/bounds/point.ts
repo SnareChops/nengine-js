@@ -5,6 +5,11 @@ export class Point {
     protected Y: number = 0;
     protected Z: number = 0;
 
+    constructor(x: number = 0, y: number = 0) {
+        this.X = x;
+        this.Y = y;
+    }
+
     /** returns the x and y components as a vector */
     pos(): Vector {
         return new Vector(this.X, this.X);

@@ -1,6 +1,6 @@
-import { Camera } from './camera';
 import { Raw } from '../bounds/raw';
 import { Context, Image } from '../image';
+import { Camera } from '../types/camera';
 
 interface backgroundPiece {
     image: Image;
@@ -13,6 +13,7 @@ interface backgroundPiece {
  * background
  * Consider using ChunkImage() or ChunkBounds() if needed to
  * split a large image into smaller pieces
+ * Note: This is also a RenderLayer that can be used with the Renderer
  */
 export class Background extends Raw {
     #pieces: backgroundPiece[] = [];

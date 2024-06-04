@@ -28,7 +28,8 @@ export class Raw extends Point {
     }
     /** Gets the absolute x,y position of the top left corner of the bounds */
     rawPos(): [x: number, y: number] {
-        return [this.X - this.#offsetX * this.#scaleX, this.Y - this.#offsetY * this.#scaleY];
+        const [ox, oy] = this.offset();
+        return [this.X - ox, this.Y - oy];
     }
     /**
      * Sets the horizontal and vertical anchor setting for the bounds 
@@ -109,6 +110,7 @@ export class Raw extends Point {
         this.#width = w;
         this.#height = h;
     }
+    /** Resize the bounds maintaining the anchor point */
     resize(w: number, h: number) {
         this.#offsetX = this.#offsetX * (w / this.#width);
         this.#offsetY = this.#offsetY * (h / this.#height);
@@ -174,28 +176,40 @@ export class Raw extends Point {
     }
     /** Gets the absolute x,y position at the midpoint of the bounds */
     mid(): [x: number, y: number] {
-        return [Math.floor(this.X + (this.#width * this.#scaleX) / 2), Math.floor(this.Y + (this.#height * this.#scaleY) / 2)];
+        const [x, y] = this.rawPos();
+        const [w, h] = this.size();
+        return [x + (w - 1) / 2, y + (h - 1) / 2];
     }
     /** Gets the maximum absolute x,y position of the bounds */
     max(): [x: number, y: number] {
-        return [Math.floor(this.X + this.#width * this.#scaleX), Math.floor(this.Y + this.#height * this.#scaleY)];
+        const [x, y] = this.rawPos();
+        const [w, h] = this.size();
+        return [x + (w - 1), y + (h - 1)];
+    }
+    /** Gets the minimum absolute x position of the bounds */
+    minX(): number {
+        return Math.floor(this.X - this.#offsetX);
+    }
+    /** Gets the minimum absolute y position of the bounds */
+    minY(): number {
+        return Math.floor(this.Y - this.#offsetY);
     }
     /** Gets the maximum absolute x position of the bounds */
     maxX(): number {
-        return Math.floor(this.X - this.#offsetX + this.#width * this.#scaleX);
+        return Math.floor(this.X - this.#offsetX + (this.#width - 1) * this.#scaleX);
     }
     /** Gets the maximum absolute y position of the bounds */
     maxY(): number {
-        return Math.floor(this.Y - this.#offsetY + this.#height * this.#scaleY);
+        return Math.floor(this.Y - this.#offsetY + (this.#height - 1) * this.#scaleY);
     }
     /** Checks if the provided x,y position is within the bounds */
     isWithin(x: number, y: number): boolean {
-        const [x1, y1] = this.min();
-        if (this.width() == 1 && this.height() == 1) {
+        const [x1, y1] = this.rawPos();
+        if (this.#width == 1 && this.#height == 1) {
             return x == x1 && y == y1;
         }
         const [x2, y2] = this.max();
-        return x > x1 && x < x2 && y > y1 && y < y2;
+        return x >= x1 && x <= x2 && y >= y1 && y <= y2;
     }
     /**
      * Gets the normal vector of the provided edge

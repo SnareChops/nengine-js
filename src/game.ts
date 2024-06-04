@@ -47,9 +47,12 @@ export class BasicGame {
         if (typeof (scene as unknown as Loadable).load === 'function') {
             const done = (scene: Scene) => this.#scene = scene;
             this.#scene = (scene as unknown as Loadable).load(done, this);
-            return;
+        } else {
+            this.#scene = scene;
         }
-        this.#scene = scene;
+        if (typeof (this.#scene as unknown as Initable).init === 'function') {
+            (this.#scene as unknown as Initable).init(this);
+        }
     }
 
     update(delta: number): void {
@@ -62,6 +65,7 @@ export class BasicGame {
             }
         }
         if (this.#updateTimer) this.#updateTimer.start();
+        // TODO: Fix the first frame bug
         this.#scene.update(delta);
         if (this.#updateTimer) this.#updateTimer.end();
     }

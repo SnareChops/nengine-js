@@ -1,6 +1,6 @@
-import { BasicCamera } from './camera-basic';
 import { Context, Image } from '../image';
-import { createCanvas } from '..';
+import { createCanvas } from '../util';
+import { BasicCamera } from './camera-basic';
 
 export class BufferedCamera extends BasicCamera {
     #image: Image;

@@ -1,8 +1,11 @@
 import { Game } from './types/game';
 import { KEYS, Key, KeyInfo, keyInit } from './keyboard';
-import { MOUSE, MouseInfo, mouseInit } from './mouse';
-import { PANIC, SHOULD_PANIC, panic } from './panic';
+import { MouseInfo, mouseInit } from './mouse';
+import { panic } from './panic';
 
+export const MOUSE = Symbol('MOUSE');
+export const PANIC = Symbol('PANIC');
+export const SHOULD_PANIC = Symbol('SHOULD_PANIC');
 export const CONTEXT = Symbol('CONTEXT');
 
 export class Engine {

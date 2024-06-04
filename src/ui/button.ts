@@ -1,6 +1,6 @@
+import { isSet } from '../bit';
 import { RawBounds } from '../bounds';
 import { MouseButton, isMouseButtonPressed } from '../mouse';
-import { isSet } from '../util';
 
 export enum ButtonState {
     None = 0,
@@ -41,7 +41,7 @@ export class Button extends RawBounds {
      * the button has been positioned in the scene, it may use absolute
      * or relative coordinates.
      */
-    update(x: number, y: number, delta: number) {
+    update(x: number, y: number): boolean {
         const prev = this.#state;
         this.#state = 0;
         if (this.isWithin(x, y)) {
@@ -56,5 +56,6 @@ export class Button extends RawBounds {
                 }
             }
         }
+        return prev != this.#state;
     }
 }

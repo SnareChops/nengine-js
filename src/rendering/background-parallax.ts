@@ -1,7 +1,12 @@
-import { Camera } from './camera';
 import { Raw } from '../bounds/raw';
-import { Image, Context } from '../image';
+import { Context, Image } from '../image';
+import { Camera } from '../types/camera';
+import { BasicCamera } from './camera-basic';
 
+/** 
+ * Represents a Background that can be used to create a parallax effect
+ * Note: This is also a RenderLayer that can be used with the Renderer
+ */
 export class ParallaxBackground extends Raw {
     #camera: Camera;
     #order: number;
@@ -15,21 +20,21 @@ export class ParallaxBackground extends Raw {
         this.#worldWidth = worldWidth;
         this.#worldHeight = worldHeight;
         this.#image = image;
-        this.#camera = new Camera(viewWidth, viewHeight, image.width, image.height);
+        this.#camera = new BasicCamera(viewWidth, viewHeight, image.width, image.height);
     }
-    /** ParallaxBackground rendering order */
+    /** RenderLayer ordering */
     order(): number {
         return this.#order;
     }
-
-    update(x: number, y: number, delta: number) {
+    /** Update the background */
+    update(x: number, y: number) {
         const xp = x / this.#worldWidth;
         const yp = y / this.#worldHeight;
         x = Math.floor(this.dx() * xp);
         y = Math.floor(this.dy() * yp);
         this.#camera.setPos(x, y);
     }
-
+    /** Draw the background to the provided context */
     draw(screen: Context) {
         screen.drawImage(this.#image, ...this.#camera.view(), 0, 0, ...this.#camera.viewSize());
     }

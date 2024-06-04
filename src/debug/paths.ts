@@ -1,7 +1,7 @@
 import { Point } from '../bounds/point';
 import { Color } from '../color';
 import { Context } from '../image';
-import { Camera } from '../rendering/camera';
+import { Camera } from '../types';
 import { debugEnabled } from './debug';
 
 interface path {
