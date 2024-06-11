@@ -73,4 +73,8 @@ export function moveTowards(start: Position, end: Position, speed: number, delta
     if (dist <= length) return end.xy();
     const angle = angleBetween(start, end);
     return pointAtAngleWithDistance(...start.xy(), angle, length);
-} 
+}
+
+export function exponentialDecay(a: number, b: number, decay: number, delta: number): number {
+    return a + (a - b) * Math.exp(-decay * delta); // seconds
+}
