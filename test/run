@@ -1,4 +1,0 @@
-#!/bin/bash
-
-esbuild --bundle --outfile=index.js ts/index.ts
-http-server .

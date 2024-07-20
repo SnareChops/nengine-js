@@ -1,0 +1,19 @@
+{
+  "name": "@snarechops/nengine",
+  "version": "0.0.9",
+  "description": "Stands for \"NOT an engine\"",
+  "main": "src/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "test": "node_modules/.bin/testit",
+    "types": "npm run clean && tsc && npm run copy:types",
+    "clean": "rm -rf dist",
+    "copy:types": "cp src/types/*.d.ts dist/types/"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@snarechops/testit": "^0.0.3"
+  }
+}
