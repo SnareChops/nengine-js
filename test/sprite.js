@@ -1,4 +1,4 @@
-import * as nengine from '../src/index.js'
+import * as nengine from '../dist/index.js'
 
 export class TestSprite extends nengine.RawBounds {
   /** @type {nengine.Image} */

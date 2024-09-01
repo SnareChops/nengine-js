@@ -7,11 +7,14 @@
     "allowJs": true,
     "checkJs": true,
     "declaration": true,
-    "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true
   },
-  "files": ["src/index.js", "src/types/index.d.ts"],
-  "exclude": ["**/*.test.js"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "**/*.test.ts"
+  ]
 }

@@ -1,4 +1,4 @@
-import * as nengine from '../src/index.js'
+import * as nengine from '../dist/index.js'
 import { TestSprite } from './sprite.js'
 
 export class TestScene {
@@ -8,7 +8,7 @@ export class TestScene {
   screen = new nengine.Screen(100, 1920, 1080)
 
   constructor() {
-    const [_, context] = nengine.createCanvas(1920, 1080)
+    const context = nengine.createCanvas(1920, 1080)
     context.fillStyle = 'black'
     context.fillRect(0, 0, 1920, 1080)
     // const background = new nengine.SimpleSprite(canvas);
@@ -24,7 +24,6 @@ export class TestScene {
    * @param {number} delta
    */
   update(delta) {
-    console.log('delta', delta)
     this.sprite2.setRotation(
       this.sprite2.rotation() + (Math.PI / 8) * (delta / 1000),
     )

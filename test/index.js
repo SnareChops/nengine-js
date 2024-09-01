@@ -1,4 +1,4 @@
-import * as nengine from '../src/index.js'
+import * as nengine from '../dist/index.js'
 import { TestScene } from './scene.js'
 
 async function main() {
@@ -9,11 +9,11 @@ async function main() {
   if (!context) throw new Error('Unable to get 2d context')
   document.body.append(canvas)
 
-  await nengine.preloadImage('TestIcon', '/assets/TestIcon.png')
-
-  const game = new nengine.BasicGame(canvas.width, canvas.height)
+  await nengine.preloadImage('TestIcon', 'assets/TestIcon.png')
+  const engine = new nengine.Engine(context)
+  const game = new nengine.BasicGame(canvas.width, canvas.height, nengine.Key.KeyC)
   game.loadScene(new TestScene())
-  new nengine.Engine(context).runGame(game)
+  engine.runGame(game)
 }
 
 main()
